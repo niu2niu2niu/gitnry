@@ -1,9 +1,3 @@
-/*************************************************************************
-   > File Name: longest_substring_without_repeating_characters.cpp
-   > Author: MT_NLP_Team
-   > Mail: tne.nlp@meituan.com
-   > Created Time: 09:15:18 2017-08-14
- ************************************************************************/
 #include <iostream>
 #include <string>
 #include <vector>

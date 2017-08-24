@@ -1,9 +1,3 @@
-/*************************************************************************
-   > File Name: two_sum.cpp
-   > Author: MT_NLP_Team
-   > Mail: tne.nlp@meituan.com
-   > Created Time: 08:37:36 2017-08-10
- ************************************************************************/
 #include <iostream>
 #include <vector>
 #include <unordered_map>

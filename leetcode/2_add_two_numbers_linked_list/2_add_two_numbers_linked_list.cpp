@@ -1,9 +1,3 @@
-/*************************************************************************
-   > File Name: add_two_numbers_linked_list.cpp
-   > Author: MT_NLP_Team
-   > Mail: tne.nlp@meituan.com
-   > Created Time: 09:04:48 2017-08-11
- ************************************************************************/
 #include <iostream>
 #include <linked_list.h>
 
