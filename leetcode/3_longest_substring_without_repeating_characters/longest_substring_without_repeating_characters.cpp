@@ -91,6 +91,19 @@ class Solution3
         int lengthOfLongestSubstring(string s)
         {
             int result = 0;
+            int i = 0;
+            int j = 0;
+            unordered_map<char, int> s_i_map;
+            unordered_map<char, int>::iterator iter;
+            for (j = 0; j < s.length(); j++)
+            {
+                result = max(result, j - i);
+                iter = s_i_map.find(s[j]);
+                if (iter != s_i_map.end() && iter->second >= i)
+                    i = iter->second + 1;
+                s_i_map[s[j]] = j;
+            }
+            result = max(result, j - i);
             return result;
         }
 };
@@ -120,53 +133,47 @@ class Solution4
         }
 };
 
+template <class T> void cal_out (T & solution)
+{
+    vector <string> str_list;
+    str_list.push_back("pwwkew");
+    str_list.push_back("abba");
+    str_list.push_back("aab");
+    str_list.push_back("abcabcbb");
+    str_list.push_back("");
+    int result = 0;
+    int i = 0;
+    cout << "result: ";
+    for (i = 0; i < str_list.size() - 1; i++)
+    {
+        string &str = str_list[i];
+        result = solution.lengthOfLongestSubstring(str);
+        cout << str << ":" << result << ", ";
+    }
+    string &str = str_list[i];
+    result = solution.lengthOfLongestSubstring(str);
+    cout << result << endl;
+    return;
+}
+
 int main(int argc, char** argv)
 {
-    string str1 = "pwwkew";
-    string str2 = "abba";
-    string str3 = "aab";
-    string str4 = "";
-    int result = 0;
 
     Solution1 s1;
-    result = s1.lengthOfLongestSubstring(str1);
-    cout << "s1 max len: " << result << ", ";
-    result = s1.lengthOfLongestSubstring(str2);
-    cout << result << ", ";
-    result = s1.lengthOfLongestSubstring(str3);
-    cout << result << ", ";
-    result = s1.lengthOfLongestSubstring(str4);
-    cout << result << endl;
+    cout << "s1 ";
+    cal_out(s1);
 
     Solution2 s2;
-    result = s2.lengthOfLongestSubstring(str1);
-    cout << "s2 max len: " << result << ", ";
-    result = s2.lengthOfLongestSubstring(str2);
-    cout << result << ", ";
-    result = s2.lengthOfLongestSubstring(str3);
-    cout << result << ", ";
-    result = s2.lengthOfLongestSubstring(str4);
-    cout << result << endl;
+    cout << "s2 ";
+    cal_out(s2);
 
     Solution3 s3;
-    result = s3.lengthOfLongestSubstring(str1);
-    cout << "s3 max len: " << result << ", ";
-    result = s3.lengthOfLongestSubstring(str2);
-    cout << result << ", ";
-    result = s3.lengthOfLongestSubstring(str3);
-    cout << result << ", ";
-    result = s3.lengthOfLongestSubstring(str4);
-    cout << result << endl;
+    cout << "s3 ";
+    cal_out(s3);
 
     Solution4 s4;
-    result = s4.lengthOfLongestSubstring(str1);
-    cout << "s4 max len: " << result << ", ";
-    result = s4.lengthOfLongestSubstring(str2);
-    cout << result << ", ";
-    result = s4.lengthOfLongestSubstring(str3);
-    cout << result << ", ";
-    result = s4.lengthOfLongestSubstring(str4);
-    cout << result << endl;
+    cout << "s4 ";
+    cal_out(s4);
     
     return 0;
 }
