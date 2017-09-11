@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// 最简单的方法，归并排序，然后在新的排序后的数组中找中位数，但是时间复杂度是O(m+n)
 class Solution1
 {
     public:
@@ -49,20 +50,104 @@ class Solution1
         }
 };
 
-//class Solution2
-//{
-//    public:
-//        double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
-//        {}
-//};
-//
-//class Solution3
-//{
-//    public:
-//        double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
-//        {}
-//};
-//
+// 跟 solution1 思路差不多，只是已经知道了中位数的位置，可以提前停止。
+class Solution2
+{
+    public:
+        double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
+        {
+            int m = nums1.size();
+            int n = nums2.size();
+            int total = m + n;
+            int left = 0;
+            int right = 0;
+            if (total % 2 == 0)
+            {
+                right = total / 2;
+                left = right - 1;
+            }
+            else
+            {
+                right = (total - 1) / 2;
+                left = right;
+            }
+            //cout << left << ", " << right << endl;
+            int i = 0;
+            int j = 0;
+            vector <int> total_nums;
+            while (i < m && j < n && total_nums.size() <= right + 1)
+            {
+                if (nums1[i] < nums2[j])
+                    total_nums.push_back(nums1[i++]);
+                else
+                    total_nums.push_back(nums2[j++]);
+            }
+            if (i == m && total_nums.size() <= right + 1)
+                while (j < n)
+                    total_nums.push_back(nums2[j++]);
+            if (j == n && total_nums.size() <= right + 1)
+                while (i < m)
+                    total_nums.push_back(nums1[i++]);
+            double result = 0.0;
+            result = double(total_nums[left] + total_nums[right]) / 2;
+            return result;
+        }
+};
+
+class Solution3
+{
+    public:
+        double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
+        {
+            int m = nums1.size();
+            int n = nums2.size();
+            int total = m + n;
+            int left = 0;
+            int right = 0;
+            if (total % 2 == 0)
+            {
+                right = total / 2;
+                left = right - 1;
+            }
+            else
+            {
+                right = (total - 1) / 2;
+                left = right;
+            }
+            //cout << left << ", " << right << endl;
+            int i = 0;
+            int j = 0;
+            int num_left = 0;
+            int num_right = 0;
+            int count = 0;
+            while (i < m && j < n && count <= left)
+            {
+                if (nums1[i] < nums2[j])
+                    num_left = nums1[i++], count++;
+                else
+                    num_left = nums2[j++], count++;
+            }
+            if (i == m && count <= left)
+                while (j < n)
+                    num_left = nums2[j++], count++;
+            if (j == n && count <= left)
+                while (i < m)
+                    num_left = nums1[i++], count++;
+            if (left < right)
+                if (i == m)
+                    num_right = nums2[j];
+                else if (j == n)
+                    num_right = nums1[j];
+                else
+                    num_right = min(nums1[i], nums2[j]);
+            else
+                num_right = num_left;
+            double result = 0.0;
+            result = double(num_left + num_right) / 2;
+            return result;
+        }
+};
+
 //class Solution4
 //{
 //    public:
@@ -91,6 +176,12 @@ template <class T> void cal_out (T & solution)
     nums2.push_back(4);
     nums_list.push_back(nums1);
     nums_list.push_back(nums2);
+    nums1.clear();
+    nums2.clear();
+    nums1.push_back(3);
+    nums1.push_back(4);
+    nums_list.push_back(nums1);
+    nums_list.push_back(nums2);
     double result = 0.0;
     int i = 0;
     cout << "result: ";
@@ -116,15 +207,15 @@ int main(int argc, char** argv)
     Solution1 s1;
     cout << "s1 ";
     cal_out(s1);
-//
-//    Solution2 s2;
-//    cout << "s2 ";
-//    cal_out(s2);
-//
-//    Solution3 s3;
-//    cout << "s3 ";
-//    cal_out(s3);
-//
+
+    Solution2 s2;
+    cout << "s2 ";
+    cal_out(s2);
+
+    Solution3 s3;
+    cout << "s3 ";
+    cal_out(s3);
+
 //    Solution4 s4;
 //    cout << "s4 ";
 //    cal_out(s4);
