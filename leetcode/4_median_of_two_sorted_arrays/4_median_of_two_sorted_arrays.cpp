@@ -1,8 +1,6 @@
 #include <iostream>
-#include <string>
+#include <assert.h>
 #include <vector>
-#include <sstream>
-#include <unordered_map>
 
 using namespace std;
 
@@ -15,6 +13,7 @@ class Solution1
             int m = nums1.size();
             int n = nums2.size();
             int total = m + n;
+            assert(total != 0);
             int left = 0;
             int right = 0;
             if (total % 2 == 0)
@@ -59,6 +58,7 @@ class Solution2
             int m = nums1.size();
             int n = nums2.size();
             int total = m + n;
+            assert(total != 0);
             int left = 0;
             int right = 0;
             if (total % 2 == 0)
@@ -127,17 +127,18 @@ class Solution3
                 else
                     num_left = nums2[j++], count++;
             }
-            if (i == m && count <= left)
-                while (j < n)
+            if (i == m)
+                while (j < n && count <= left)
                     num_left = nums2[j++], count++;
-            if (j == n && count <= left)
-                while (i < m)
+            if (j == n)
+                while (i < m && count <= left)
                     num_left = nums1[i++], count++;
+            //cout << "success" << endl;
             if (left < right)
                 if (i == m)
                     num_right = nums2[j];
                 else if (j == n)
-                    num_right = nums1[j];
+                    num_right = nums1[i];
                 else
                     num_right = min(nums1[i], nums2[j]);
             else

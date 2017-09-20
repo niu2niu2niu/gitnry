@@ -2,6 +2,7 @@
 To solve this problem, we need to understand "What is the use of median". In statistics, the median is used for dividing a set into two equal length subsets, that one subset is always greater than the other. If we understand the use of median for dividing, we are very close to the answer.
 solution1 是最好想的笨办法，代码写出来也很明白，不用细说。
 solution2 也不难想，其实就是让 solution1 提前停止了而已。
+solution3 主要是基于内存的考虑，因为前面 2 种方法都是把归并后的数组整个保存下来了，其实没必要。代码也不复杂，自己看看吧。
 
 
 
