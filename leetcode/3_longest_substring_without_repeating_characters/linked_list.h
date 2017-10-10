@@ -1,9 +1,3 @@
-/*************************************************************************
-   > File Name: linked_list.h
-   > Author: MT_NLP_Team
-   > Mail: tne.nlp@meituan.com
-   > Created Time: 11:08:54 2017-08-11
- ************************************************************************/
 #include<iostream>
 using namespace std;
 

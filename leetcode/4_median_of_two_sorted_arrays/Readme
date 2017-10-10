@@ -1,12 +1,8 @@
 在 discuss 里看到的对于中位数的说明：
 To solve this problem, we need to understand "What is the use of median". In statistics, the median is used for dividing a set into two equal length subsets, that one subset is always greater than the other. If we understand the use of median for dividing, we are very close to the answer.
-solution1 是最好想的笨办法，代码写出来也很明白，不用细说。
-solution2 也不难想，其实就是让 solution1 提前停止了而已。
-solution3 主要是基于内存的考虑，因为前面 2 种方法都是把归并后的数组整个保存下来了，其实没必要。代码也不复杂，自己看看吧。
-
-
-
-
+solution1 是最好想的笨办法，代码写出来也很明白，就是利用归并排序的思想，把 2 个数组的内容做整体排序，存入一个新数组中，再返回新数组的中位数。
+solution2 也不难想，其实就是让 solution1 提前停止了而已，因为整体排序结果中超过中位数的内容就不用再计算了。
+solution3 主要是基于内存的考虑，因为前面 2 种方法都是把归并后的数组整个保存下来了，其实没必要，只需要知道左右两边的数即可。
 
 下面是博客中发现的好说法：
 今天发现了leetcode上面一道题，觉得非常经典，记录之。
@@ -16,3 +12,6 @@ solution3 主要是基于内存的考虑，因为前面 2 种方法都是把归�
 方案2：我们可以发现，现在我们是不需要“排序”这么复杂的操作的，因为我们仅仅需要第k大的元素。我们可以用一个计数器，记录当前已经找到第m大的元素了。同时我们使用两个指针pA和pB，分别指向A和B数组的第一个元素。使用类似于merge sort的原理，如果数组A当前元素小，那么pA++，同时m++。如果数组B当前元素小，那么pB++，同时m++。最终当m等于k的时候，就得到了我们的答案——O(k)时间，O(1)空间。
 但是，当k很接近于n的时候，这个方法还是很费时间的。当然，我们可以判断一下，如果k比n/2大的话，我们可以从最大的元素开始找。但是如果我们要找所有元素的中位数呢？时间还是O(n/2)=O(n)的。有没有更好的方案呢？
 我们可以考虑从k入手。如果我们每次都能够剔除一个一定在第k大元素之前的元素，那么我们需要进行k次。但是如果每次我们都剔除一半呢？所以用这种类似于二分的思想。
+在最好情况下，每次都有k一半的元素被删除，所以算法复杂度为logk，由于求中位数时k为（m+n）/2，所以算法复杂度为log(m+n)。
+
+discuss 中的描述很详细了，里面比较关键的话：中位数的作用是将一个集合分隔成两个等长的子集合，并保证其中一个子集合中的所有元素都小于另一个集合。
