@@ -37,6 +37,7 @@ int solution3(int n, vector<int> &fn)
 // 但是 solution3 的空间复杂度依旧比较大，其实可以不必所有结果都存储的，因为每次只需要前面 2 个结果。
 int solution4(int n)
 {
+    if (n < 2) return n;
     int f_n1 = 1;
     int f_n2 = 0;
     int f_n = 0;

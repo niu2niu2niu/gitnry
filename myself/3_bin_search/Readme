@@ -1,3 +1,16 @@
-注意使用(left + right) / 2会有整数溢出的问题（问题会出现在当 left + right 的结果大于表达式结果类型所能表示的最大值时，这样，产生溢出后再 /2 是不会产生正确结果的，而 left + ((right - left) / 2)不存在这个问题。
-注意到循环结束之后 left 和 right 的关系一定是 left > right，也就是 left = right + 1。这个对于后续的判断是非常重要的。
 注意二分查找的各种变种的条件如何设置。不管条件如何变化，整体的代码框架是不变的。
+注意查找前的空数组判断，对于 return num_list_sorted[right] < value ? right : -1; 的情况，空数组调用下标操作会 core。对于 return left; 的情况，空数组会直接返回 left == 0，导致出错。
+注意使用 middle = (left + right) / 2会有整数溢出的问题（问题会出现在当 left + right 的结果大于表达式结果类型所能表示的最大值时，这样，产生溢出后再 /2 是不会产生正确结果的，而 middle = left + (right - left) / 2 不存在这个问题。
+
+终于因为二分查找学会了数组边界的判断。
+对于一个数组需要确定它的左边界（left）和右边界（right），从而知道这个数组的范围，这样才能继续后面的操作，比如说遍历。
+一般来说可以使用[left, right)和[left, right] 2 种边界。经验上来看，前者好一些。比如说一般我们在遍历数组时，会写：for (int i = 0; i < size; i++)，即[0, size)。后者应该是for (int i = 0; i <= size - 1; i++)，即[0, size - 1]。
+前者的数组长度是 right - left，后者是 right - left + 1。
+
+二分查找就是将原始数组不断的一分为二，期间边界设定需要保持一致，不然容易出错。（其实肯定是需要一致的，不然即使对了也是碰巧）
+二分查找的循环终止条件应该是数组中只有唯一 1 个元素，判断完这个元素，那数组中所有的值就都被查找完了。
+如果使用[left, right)的边界设定方式，那就是 left 指向数组中唯一的元素，right 指向它的下一个位置，即 left = right - 1。所以 while 循环的条件应该是：while (left < right)。而且 right 更新应该是 right = middle，而 left = middle + 1。因为 middle = left + (right - left) / 2 得到的下标一定是在[left, right)中的，其对应的元素已经被判断过了。如果用来更新 left，那它的下一个元素才应该出现在子数组中；如果用来更新 right，那它才可能是子数组的开区间，如果 right = middle - 1，那这个新的 right 就是一个未被判断过的元素，不能作为开区间。
+如果使用[left, right]的边界设定方式，那就是 left = right 都指向数组中的唯一元素。所以 while 循环的条件应该是：while (left <= right)。而且 right 更新应该是 right = middle - 1，left = middle + 1。因为 middle 已经被判断过了，这种边界设定下，更新后的 left 和 right 都应该是未被判断过的元素下标。
+
+目前的代码都是使用[left, right]的边界设定，while (left <= right)。注意到循环结束之后 left 和 right 的关系一定是 left > right，也就是 left = right + 1。这个对于后续的判断是非常重要的。
+如果使用[left, right)的边界设定，while (left < right)。也就是 left = right。

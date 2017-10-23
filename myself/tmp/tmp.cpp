@@ -156,47 +156,47 @@
 //        
 //}
 
-#include <iostream>
-#include <vector>
-#include <algorithm>
-using namespace std;
-
-int A[43][10];
-int getVal(int n, int tail)
-{
-    if (n <= 0)
-        return 0;
-    else
-        return A[n][tail];
-}
-
-int bignum = 0;
-
-void find(int n, int tail)
-{
-    if (n <= 0)
-        return;
-    int tempmax = 0;
-    for (int i = 1; i <= 9; ++i)
-    {
-            if (i == tail)
-                continue;
-            if (getVal(n - tail, i) == 0)
-                find(n - tail, i);
-            if (getVal(n - tail, i) > tempmax)
-                tempmax = getVal(n - tail, i);
-        }
-        A[n][tail] = tempmax * 10 + tail;
-            if (A[n][tail] > bignum)
-                        bignum = A[n][tail];
-}
+//#include <iostream>
+//#include <vector>
+//#include <algorithm>
+//using namespace std;
+//
+//int A[43][10];
+//int getVal(int n, int tail)
+//{
+//    if (n <= 0)
+//        return 0;
+//    else
+//        return A[n][tail];
+//}
+//
+//int bignum = 0;
+//
+//void find(int n, int tail)
+//{
+//    if (n <= 0)
+//        return;
+//    int tempmax = 0;
+//    for (int i = 1; i <= 9; ++i)
+//    {
+//            if (i == tail)
+//                continue;
+//            if (getVal(n - tail, i) == 0)
+//                find(n - tail, i);
+//            if (getVal(n - tail, i) > tempmax)
+//                tempmax = getVal(n - tail, i);
+//        }
+//        A[n][tail] = tempmax * 10 + tail;
+//            if (A[n][tail] > bignum)
+//                        bignum = A[n][tail];
+//}
+#include <stdio.h>
 
 int main()
 {
-    int n;
-    cin >> n;
-    for (int i = 1; i <= 9; ++i)
-        find(n, i);
-    cout << bignum << endl;
+    int a = 1;
+    int b = 2;
+    printf("%d", a);
+    printf("%d", b);
     return 0;
 }

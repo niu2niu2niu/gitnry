@@ -60,6 +60,7 @@ class Solution3
         {
             int left = 0;
             int right = num_list_sorted.size() - 1;
+            if (right == -1) return -1;
             while (left <= right)
             {
                 int middle = left + ((right - left) >> 1);
@@ -82,6 +83,7 @@ class Solution4
         {
             int left = 0;
             int right = num_list_sorted.size() - 1;
+            if (right == -1) return -1;
             while (left <= right)
             {
                 int middle = left + ((right - left) >> 1);
@@ -102,6 +104,7 @@ class Solution5
         {
             int left = 0;
             int right = num_list_sorted.size() - 1;
+            if (right == -1) return -1;
             while (left <= right)
             {
                 int middle = left + ((right - left) >> 1);
@@ -110,7 +113,8 @@ class Solution5
                 else
                     left = middle + 1;
             }
-            return num_list_sorted[left] > value ? left : -1;
+            //return num_list_sorted[left] > value ? left : -1;
+            return left;
         }
 };
 
@@ -122,6 +126,7 @@ class Solution6
         {
             int left = 0;
             int right = num_list_sorted.size() - 1;
+            if (right == -1) return -1;
             while (left <= right)
             {
                 int middle = left + ((right - left) >> 1);
@@ -142,6 +147,7 @@ class Solution7
         {
             int left = 0;
             int right = num_list_sorted.size() - 1;
+            if (right == -1) return -1;
             while (left <= right)
             {
                 int middle = left + ((right - left) >> 1);
@@ -150,7 +156,8 @@ class Solution7
                 else
                     left = middle + 1;
             }
-            return num_list_sorted[right] < value ? right : -1;
+            //return num_list_sorted[right] < value ? right : -1;
+            return right;
         }
 };
 
@@ -162,6 +169,7 @@ class Solution8
         {
             int left = 0;
             int right = num_list_sorted.size() - 1;
+            //if (right == -1) return -1;
             while (left <= right)
             {
                 int middle = left + ((right - left) >> 1);
