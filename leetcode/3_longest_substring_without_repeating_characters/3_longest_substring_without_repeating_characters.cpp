@@ -138,7 +138,7 @@ template <class T> void cal_out (T & solution)
     int result = 0;
     int i = 0;
     cout << "result: ";
-    for (i = 0; i < str_list.size() - 1; i++)
+    for (i = 0; i + 1< str_list.size(); i++)
     {
         string &str = str_list[i];
         result = solution.lengthOfLongestSubstring(str);

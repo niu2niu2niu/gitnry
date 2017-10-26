@@ -188,6 +188,7 @@ template <class T> void cal_out (T & solution)
     int i = 0;
     cout << "result: ";
     // 注意 vector.size() 返回的是无符号型，进行比较的时候需要注意负数的情况
+    //while (i + 3 < nums_list.size())
     while (i < int(nums_list.size() - 3))
     {
         vector <int> n1 = nums_list[i];
