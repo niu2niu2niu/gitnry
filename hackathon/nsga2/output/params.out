@@ -46,10 +46,10 @@
  Lower limit of real variable 20 = 0.000000e+00
  Upper limit of real variable 20 = 1.000000e+00
  Probability of crossover of real variable = 8.000000e-01
- Probability of mutation of real variable = 0.000000e+00
+ Probability of mutation of real variable = 2.000000e-02
  Distribution index for crossover = 1.000000e+01
  Distribution index for mutation = 5.000000e+01
  Number of binary variables = 0
  Seed for random number generator = 5.000000e-01
- Number of crossover of real variable = 4802
- Number of mutation of real variable = 0
+ Number of crossover of real variable = 4837
+ Number of mutation of real variable = 4754
