@@ -1,0 +1,12 @@
+seed=0.5;
+popsize=4;
+ngen=3;
+nobj=2;
+ncon=0;
+nreal=20;
+pcross_real=0.8;
+eta_c=10;
+eta_m=50;
+nbin=0;
+pcross_bin=0.8;
+prob_name=ptts
