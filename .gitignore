@@ -9,3 +9,6 @@
 # 可执行文件
 exc
 /tmp
+*_bak
+*_old
+*.tar.gz
