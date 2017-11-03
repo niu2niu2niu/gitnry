@@ -12,3 +12,4 @@ exc
 *_bak
 *_old
 *.tar.gz
+*.pyc
