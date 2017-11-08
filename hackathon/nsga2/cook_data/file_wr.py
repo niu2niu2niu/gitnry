@@ -2,6 +2,7 @@
 #coding:utf8
 
 import sys
+from methods_traversal import methods_traversal
 
 # 读当前需要调度的菜名
 def read_dish_name(filename):
@@ -45,7 +46,7 @@ def read_dish_file_map(filename):
     return d
 
 # 读取每个菜的任务文件
-def read_dish_file(filename):
+def read_dish_file(filename, d_unfold):
     d = {}
     with open(filename, 'r') as f:
         data = f.readlines()
@@ -73,5 +74,27 @@ def read_dish_file(filename):
                 step = int(step.replace('step', ''))
                 time = int(time.replace('time=', ''))
                 d[step]['time'] = time
+                machine = machine.replace('machine=', '')
+                machine_l = machine.split(',')
+                d[step]['machine'] = methods_traversal(d_unfold, machine_l)
     d_s = sorted(d.iteritems(), key=lambda d:d[0], reverse = True)
     return d
+
+# 将已经汇总好的任务所有信息存入文件
+def write_step_total(d_step_total):
+    with open('output/text', 'w') as f_text:
+        with open('output/time', 'w') as f_time:
+            with open('output/restraint', 'w') as f_restraint:
+                for step in d_step_total:
+                    # 任务对应的文本
+                    text = str(step) + '\t' + d_step_total[step]['text'] + '\n'
+                    f_text.write(text)
+                    # 任务的执行所需时间
+                    time = str(step) + '\t' + str(d_step_total[step]['time']) + '\n'
+                    f_time.write(time)
+                    # 任务优先级
+                    for r in d_step_total[step]['restraint']:
+                        restraint = str(step) + '\t' + str(r) + '\n'
+                        f_restraint.write(restraint)
+                    # 任务方案个数
+                    method = str(step) + '\t' + str(len(d_step_total[step]['machine'])) + '\n'
