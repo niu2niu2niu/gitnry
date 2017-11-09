@@ -274,7 +274,10 @@ int main (int argc, char **argv)
     allocate_memory_pop (mixed_pop, 2*popsize);
     randomize();
     if (strcmp(prob_name, "ptts"))
+    {
+        allocate_ptts();
         input_ptts();
+    }
     initialize_pop (parent_pop);
     printf(" Initialization done, now performing first generation\n");
     decode_pop(parent_pop);
@@ -347,6 +350,10 @@ int main (int argc, char **argv)
     free (parent_pop);
     free (child_pop);
     free (mixed_pop);
+    if (strcmp(prob_name, "ptts"))
+    {
+        deallocate_ptts();
+    }
     printf(" Routine successfully exited \n");
     return (0);
 }

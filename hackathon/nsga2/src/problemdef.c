@@ -35,6 +35,13 @@
 
 #define task_num 20
 
+//typedef struct
+//{
+//    int m[6];
+//    int r[6][4];
+//    int time[6];
+//
+//}method;
 typedef struct
 {
     int m[6];
@@ -43,6 +50,10 @@ typedef struct
 
 }method;
 
+method *meth;
+int **restraint;
+int **restraint_comp;
+
 typedef struct
 {
     int t[task_num];
@@ -50,21 +61,39 @@ typedef struct
 
 }chr;
 
-method meth[task_num+1],
-       *meth_ptr;
+chr chri;
 
-chr chri,
-    *chri_ptr;
+void allocate_ptts()
+{
+    int meth_num = 6;
+    int r_max_num = 4;
+    meth = (method*)malloc(sizeof(method) * (task_num + 1));
+//    meth->m = (int*)malloc(sizeof(int) * meth_num);
 
-int **restraint;
-int restraint_comp[task_num][task_num];
+    restraint = (int**)malloc(sizeof(int*) * task_num);
+    restraint[0] = (int*)malloc(sizeof(int) * task_num * task_num);
+    for(int i = 1; i < task_num; i++)
+    {
+        restraint[i] = restraint[i - 1] + task_num;
+    }
 
-/*  Test problem SCH1
-# of real variables = 1
-# of bin variables = 0
-# of objectives = 2
-# of constraints = 0
-*/
+    restraint_comp = (int**)malloc(sizeof(int*) * task_num);
+    restraint_comp[0] = (int*)malloc(sizeof(int) * task_num * task_num);
+    for (int i = 1; i < task_num; i++)
+    {
+        restraint_comp[i] = restraint_comp[i - 1] + task_num;
+    }
+}
+
+void deallocate_ptts()
+{
+//    free(meth->m);
+    free(meth);
+    free(restraint[0]);
+    free(restraint);
+    free(restraint_comp[0]);
+    free(restraint_comp);
+}
 
 void input_ptts()
 {
@@ -271,13 +300,6 @@ void input_ptts()
 
     meth[20].time[1] = 4;  meth[20].time[2] = 4;  meth[20].time[3] = 5;  meth[20].time[4] = 0;  meth[20].time[5] = 0;
 
-    restraint = (int**)malloc(sizeof(int*) * task_num);
-    restraint[0] = (int*)malloc(sizeof(int) * task_num * task_num);
-    for(int i = 1; i < task_num; i++)
-    {
-        restraint[i] = restraint[i - 1] + task_num;
-    }
-
     restraint[2-1][1-1] = 1;// t2 > t1
     restraint[1-1][2-1] = -1;
 
@@ -402,10 +424,15 @@ void input_ptts()
     }//while循环结束时，完全约束矩阵(2)已不再变化
     free(restraint_comp2[0]);
     free(restraint_comp2);
-    free(restraint[0]);
-    free(restraint);
 }
 
+
+/*  Test problem SCH1
+# of real variables = 1
+# of bin variables = 0
+# of objectives = 2
+# of constraints = 0
+*/
 #ifdef sch1
 void test_problem_sch1 (double *xreal, double *xbin, int **gene, double *obj, double *constr)
 {
