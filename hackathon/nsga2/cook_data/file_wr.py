@@ -85,16 +85,27 @@ def write_step_total(d_step_total):
     with open('output/text', 'w') as f_text:
         with open('output/time', 'w') as f_time:
             with open('output/restraint', 'w') as f_restraint:
-                for step in d_step_total:
-                    # 任务对应的文本
-                    text = str(step) + '\t' + d_step_total[step]['text'] + '\n'
-                    f_text.write(text)
-                    # 任务的执行所需时间
-                    time = str(step) + '\t' + str(d_step_total[step]['time']) + '\n'
-                    f_time.write(time)
-                    # 任务优先级
-                    for r in d_step_total[step]['restraint']:
-                        restraint = str(step) + '\t' + str(r) + '\n'
-                        f_restraint.write(restraint)
-                    # 任务方案个数
-                    method = str(step) + '\t' + str(len(d_step_total[step]['machine'])) + '\n'
+                with open('output/method', 'w') as f_method:
+                    with open('output/machine', 'w') as f_machine:
+                        for step in d_step_total:
+                            # 任务对应的文本
+                            text = str(step) + '\t' + d_step_total[step]['text'] + '\n'
+                            f_text.write(text)
+                            # 任务的执行所需时间
+                            time = str(step) + '\t' + str(d_step_total[step]['time']) + '\n'
+                            f_time.write(time)
+                            # 任务优先级
+                            for r in d_step_total[step]['restraint']:
+                                restraint = str(step) + '\t' + str(r) + '\n'
+                                f_restraint.write(restraint)
+                            # 任务方案个数
+                            machine_num = len(d_step_total[step]['machine'])
+                            method = str(step) + '\t' + str(machine_num) + '\n'
+                            f_method.write(method)
+                            # 任务与 machine 的对应
+                            for i in range(machine_num):
+                                machine = str(step) + '\t' + str(i) + '\t' 
+                                for m in d_step_total[step]['machine'][i]:
+                                    machine += str(m) + '\t'
+                                machine = machine.strip('\t') + '\n'
+                                f_machine.write(machine)
