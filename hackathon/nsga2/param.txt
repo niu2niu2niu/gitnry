@@ -1,6 +1,6 @@
 seed=0.5;
-popsize=4;
-ngen=3;
+popsize=40;
+ngen=300;
 nobj=2;
 ncon=0;
 nreal=20;

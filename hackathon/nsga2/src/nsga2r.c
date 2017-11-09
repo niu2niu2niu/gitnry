@@ -273,6 +273,8 @@ int main (int argc, char **argv)
     allocate_memory_pop (child_pop, popsize);
     allocate_memory_pop (mixed_pop, 2*popsize);
     randomize();
+    if (strcmp(prob_name, "ptts"))
+        input_ptts();
     initialize_pop (parent_pop);
     printf(" Initialization done, now performing first generation\n");
     decode_pop(parent_pop);

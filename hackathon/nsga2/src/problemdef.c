@@ -50,6 +50,15 @@ typedef struct
 
 }chr;
 
+method meth[task_num+1],
+       *meth_ptr;
+
+chr chri,
+    *chri_ptr;
+
+int **restraint;
+int restraint_comp[task_num][task_num];
+
 /*  Test problem SCH1
 # of real variables = 1
 # of bin variables = 0
@@ -57,7 +66,7 @@ typedef struct
 # of constraints = 0
 */
 
-void input_ptts(method * meth, int * restraint_comp)
+void input_ptts()
 {
     /***********************方案***********************/
     meth[1].m[1] = 1;  meth[1].m[2] = 2;  meth[1].m[3] = 3;  meth[1].m[4] = 0;  meth[1].m[5] = 0;
@@ -262,7 +271,12 @@ void input_ptts(method * meth, int * restraint_comp)
 
     meth[20].time[1] = 4;  meth[20].time[2] = 4;  meth[20].time[3] = 5;  meth[20].time[4] = 0;  meth[20].time[5] = 0;
 
-    int restraint[task_num][task_num];
+    restraint = (int**)malloc(sizeof(int*) * task_num);
+    restraint[0] = (int*)malloc(sizeof(int) * task_num * task_num);
+    for(int i = 1; i < task_num; i++)
+    {
+        restraint[i] = restraint[i - 1] + task_num;
+    }
 
     restraint[2-1][1-1] = 1;// t2 > t1
     restraint[1-1][2-1] = -1;
@@ -343,31 +357,36 @@ void input_ptts(method * meth, int * restraint_comp)
     int rest_j=0;
     int rest_k=0;
     int rest_flag=1;
-    int restraint_comp2[task_num][task_num];
+    int **restraint_comp2 = (int**)malloc(sizeof(int*) * task_num);
+    restraint_comp2[0] = (int*)malloc(sizeof(int) * task_num * task_num);
+    for (rest_i = 1;rest_i<task_num;rest_i++)
+    {
+        restraint_comp2[rest_i] = restraint_comp2[rest_i - 1] + task_num;
+    }
     //计算完全约束矩阵
     for (rest_i = 0;rest_i<task_num;rest_i++)
         for (rest_j = 0;rest_j<task_num;rest_j++)
-            restraint_comp[rest_i * task_num + rest_j] = restraint[rest_i][rest_j];//初始化完全约束矩阵
+            restraint_comp[rest_i][rest_j] = restraint[rest_i][rest_j];//初始化完全约束矩阵
 
     while (rest_flag)//若完全约束矩阵改变，则继续改变
     {
         rest_flag = 1;
         for (rest_i = 0;rest_i<task_num;rest_i++)
             for (rest_j = 0;rest_j<task_num;rest_j++)//完全约束矩阵改变前先暂存入完全约束矩阵2中                       
-                restraint_comp2[rest_i][rest_j] = restraint_comp[rest_i * task_num + rest_j];
+                restraint_comp2[rest_i][rest_j] = restraint_comp[rest_i][rest_j];
 
         for (rest_i = 0;rest_i<task_num;rest_i++)
         {
             for (rest_j = 0;rest_j<task_num;rest_j++)//遍历完全约束矩阵                     
             {
-                if (restraint_comp[rest_i * task_num + rest_j] == 1)//将下属约束中的子约束关系加入i的完全约束矩阵中
+                if (restraint_comp[rest_i][rest_j] == 1)//将下属约束中的子约束关系加入i的完全约束矩阵中
                 {
                     for (rest_k = 0;rest_k<task_num;rest_k++)
                     {
-                        if (restraint_comp[rest_j * task_num + rest_k] == 1)
+                        if (restraint_comp[rest_j][rest_k] == 1)
                         {
-                            restraint_comp[rest_i * task_num + rest_k] = 1;
-                            restraint_comp[rest_k * task_num + rest_i] = -1;
+                            restraint_comp[rest_i][rest_k] = 1;
+                            restraint_comp[rest_k][rest_i] = -1;
                         }
                     }
                 }
@@ -375,12 +394,16 @@ void input_ptts(method * meth, int * restraint_comp)
         }
         for (rest_i = 0;rest_i<task_num;rest_i++)
             for (rest_j = 0;rest_j<task_num;rest_j++)
-                if (restraint_comp2[rest_i][rest_j] == restraint_comp[rest_i * task_num + rest_j])
+                if (restraint_comp2[rest_i][rest_j] == restraint_comp[rest_i][rest_j])
                     rest_flag++;
         if (rest_flag == task_num*task_num + 1)
             rest_flag = 0;
 
     }//while循环结束时，完全约束矩阵(2)已不再变化
+    free(restraint_comp2[0]);
+    free(restraint_comp2);
+    free(restraint[0]);
+    free(restraint);
 }
 
 #ifdef sch1
@@ -1055,17 +1078,6 @@ void test_problem_ctp8 (double *xreal, double *xbin, int **gene, double *obj, do
 
 void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, double *constr)
 {
-    method meth[task_num+1];
-    int restraint_comp[task_num][task_num];
-
-    input_ptts(meth, (int *)restraint_comp);
-    cal_obj(xreal, xbin, gene, obj, constr, meth, restraint_comp);
-}
-
-void cal_obj(double *xreal, double *xbin, int **gene, double *obj, double *constr,
-        method * meth, int * restraint_comp)
-{
-    chr chri;
     double f[2];
     double *x = xreal;
     int i,j,k,x_i,x_j,chri_i,chri_j,chri_k,r_i,r_j,r_k;
@@ -1120,7 +1132,7 @@ void cal_obj(double *xreal, double *xbin, int **gene, double *obj, double *const
     {
         for (x_j = 0;x_j < task_num;x_j++)
         {
-            dag[x_i][x_j] = restraint_comp[x_i * task_num + x_j];
+            dag[x_i][x_j] = restraint_comp[x_i][x_j];
             if (dag[x_i][x_j] == -1)
             {
                 dag[x_i][task_num]++;
@@ -1223,7 +1235,7 @@ void cal_obj(double *xreal, double *xbin, int **gene, double *obj, double *const
             //若存在约束关系，且目前的开始时间比存在约束关系的任务的完成时间短，
             //则将该任务的开始时间更新为存在约束关系的任务的完成时间
         {
-            if (restraint_comp[(chri.t[chri_i]-1) * task_num + (chri.t[chri_j]-1)]!=0 &&
+            if (restraint_comp[chri.t[chri_i]-1][chri.t[chri_j]-1]!=0 &&
                     t_time[chri.t[chri_i]-1] < t_time[chri.t[chri_j]-1] + meth[chri.t[chri_j]].time[chri.m[chri_j]])
             {
                 t_time[chri.t[chri_i]-1] = t_time[chri.t[chri_j]-1] + meth[chri.t[chri_j]].time[chri.m[chri_j]];
@@ -1287,7 +1299,7 @@ void cal_obj(double *xreal, double *xbin, int **gene, double *obj, double *const
         for (chri_j=0;chri_j<task_num;chri_j++)//遍历完全约束矩阵
         {
             //若任务i>任务j，且任务i的下标在任务j之后，则说明违反了一条约束关系
-            if (restraint_comp[chri_i * task_num + chri_j] == 1 && t_index[chri_i] > t_index[chri_j])
+            if (restraint_comp[chri_i][chri_j] == 1 && t_index[chri_i] > t_index[chri_j])
             {
                 f[1]++;
             }
@@ -1301,7 +1313,6 @@ void cal_obj(double *xreal, double *xbin, int **gene, double *obj, double *const
 
 void test_problem (double *xreal, double *xbin, int **gene, double *obj, double *constr)
 {
-    if (strcmp(prob_name, "ptts"))
-        test_problem_ptts(xreal, xbin, gene, obj, constr);
+    test_problem_ptts(xreal, xbin, gene, obj, constr);
     return;
 }
