@@ -47,17 +47,22 @@ typedef struct
     int m[6];
     int r[6][4];
     int time[6];
-
 }method;
 
 method *meth;
 int **restraint;
 int **restraint_comp;
 
+//typedef struct
+//{
+//    int t[task_num];
+//    int m[task_num];
+//
+//}chr;
 typedef struct
 {
-    int t[task_num];
-    int m[task_num];
+    int *t;
+    int *m;
 
 }chr;
 
@@ -1175,6 +1180,8 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
     //x[5] = 0.23558;
 
     //初始化
+    chri.t = (int*)malloc(sizeof(int) * task_num);
+    chri.m = (int*)malloc(sizeof(int) * task_num);
     for (chri_i=0;chri_i<task_num;chri_i++)
     {
         chri.t[chri_i] = 1;
