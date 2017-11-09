@@ -6,15 +6,14 @@
 
 typedef struct
 {
-    int *m;
-    int r[6][4];
-    int time[6];
+    int t_num;
+}task_param;
 
-}method;
-method *meth;
+task_param t_param;
 
 int main(int argc, char** argv)
 {
+    t_param.t_num = 20;
     //    char a[] = "nreal=20";
     ////    char *tmp = strtok(a, "=");
     ////    printf("%s\n", tmp);
@@ -23,17 +22,5 @@ int main(int argc, char** argv)
     //    char b[] = "nreal=20";
     //    if (strcmp(a,b) == 0)
     //        printf("true\n");
-    int meth_num = 6;
-    meth = (method*)malloc(sizeof(method) * (task_num + 1));
-    meth->m = (int*)malloc(sizeof(int) * meth_num);
-
-    meth[1].m[1] = 1;
-    meth[1].m[2] = 2;
-    meth[1].m[3] = 3;
-    meth[1].m[4] = 0;
-    meth[1].m[5] = 0;
-
-    free(meth->m);
-    free(meth);
     return 0;
 }

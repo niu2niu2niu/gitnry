@@ -33,32 +33,26 @@
 # define ctp7
 # define ctp8
 
-#define task_num 20
-
-//typedef struct
-//{
-//    int m[6];
-//    int r[6][4];
-//    int time[6];
-//
-//}method;
 typedef struct
 {
-    int m[6];
-    int r[6][4];
-    int time[6];
+    int t_num;
+    int meth_num;
+    int r_max_num;
+}task_param;
+
+task_param t_param;
+
+typedef struct
+{
+    int *m;
+    int *time;
+    int **r;
 }method;
 
 method *meth;
 int **restraint;
 int **restraint_comp;
 
-//typedef struct
-//{
-//    int t[task_num];
-//    int m[task_num];
-//
-//}chr;
 typedef struct
 {
     int *t;
@@ -70,29 +64,43 @@ chr chri;
 
 void allocate_ptts()
 {
-    int meth_num = 6;
-    int r_max_num = 4;
-    meth = (method*)malloc(sizeof(method) * (task_num + 1));
-//    meth->m = (int*)malloc(sizeof(int) * meth_num);
+    t_param.t_num = 20;
+    t_param.meth_num = 6;
+    t_param.r_max_num = 4;
 
-    restraint = (int**)malloc(sizeof(int*) * task_num);
-    restraint[0] = (int*)malloc(sizeof(int) * task_num * task_num);
-    for(int i = 1; i < task_num; i++)
+    int i = 0;
+    meth = (method*)malloc(sizeof(method) * (t_param.t_num + 1));
+    for(i = 0; i < t_param.t_num + 1; i++)
     {
-        restraint[i] = restraint[i - 1] + task_num;
+        meth[i].m = (int*)malloc(sizeof(int) * t_param.meth_num);
+        meth[i].time = (int*)malloc(sizeof(int) * t_param.meth_num);
+        meth[i].r = (int**)malloc(sizeof(int*) * t_param.meth_num);
+        for(int j = 0; j < t_param.meth_num; j++)
+            meth[i].r[j] = (int*)malloc(sizeof(int) * t_param.r_max_num);
     }
 
-    restraint_comp = (int**)malloc(sizeof(int*) * task_num);
-    restraint_comp[0] = (int*)malloc(sizeof(int) * task_num * task_num);
-    for (int i = 1; i < task_num; i++)
-    {
-        restraint_comp[i] = restraint_comp[i - 1] + task_num;
-    }
+    restraint = (int**)malloc(sizeof(int*) * t_param.t_num);
+    restraint[0] = (int*)malloc(sizeof(int) * t_param.t_num * t_param.t_num);
+    for(i = 1; i < t_param.t_num; i++)
+        restraint[i] = restraint[i - 1] + t_param.t_num;
+
+    restraint_comp = (int**)malloc(sizeof(int*) * t_param.t_num);
+    restraint_comp[0] = (int*)malloc(sizeof(int) * t_param.t_num * t_param.t_num);
+    for (i = 1; i < t_param.t_num; i++)
+        restraint_comp[i] = restraint_comp[i - 1] + t_param.t_num;
 }
 
 void deallocate_ptts()
 {
-//    free(meth->m);
+    int i = 0;
+    for(i = 0; i < t_param.t_num + 1; i++)
+    {
+        free(meth[i].m);
+        free(meth[i].time);
+        for(int j = 0; j < t_param.meth_num; j++)
+            free(meth[i].r[j]);
+        free(meth[i].r);
+    }
     free(meth);
     free(restraint[0]);
     free(restraint);
@@ -384,31 +392,31 @@ void input_ptts()
     int rest_j=0;
     int rest_k=0;
     int rest_flag=1;
-    int **restraint_comp2 = (int**)malloc(sizeof(int*) * task_num);
-    restraint_comp2[0] = (int*)malloc(sizeof(int) * task_num * task_num);
-    for (rest_i = 1;rest_i<task_num;rest_i++)
+    int **restraint_comp2 = (int**)malloc(sizeof(int*) * t_param.t_num);
+    restraint_comp2[0] = (int*)malloc(sizeof(int) * t_param.t_num * t_param.t_num);
+    for (rest_i = 1;rest_i<t_param.t_num;rest_i++)
     {
-        restraint_comp2[rest_i] = restraint_comp2[rest_i - 1] + task_num;
+        restraint_comp2[rest_i] = restraint_comp2[rest_i - 1] + t_param.t_num;
     }
     //计算完全约束矩阵
-    for (rest_i = 0;rest_i<task_num;rest_i++)
-        for (rest_j = 0;rest_j<task_num;rest_j++)
+    for (rest_i = 0;rest_i<t_param.t_num;rest_i++)
+        for (rest_j = 0;rest_j<t_param.t_num;rest_j++)
             restraint_comp[rest_i][rest_j] = restraint[rest_i][rest_j];//初始化完全约束矩阵
 
     while (rest_flag)//若完全约束矩阵改变，则继续改变
     {
         rest_flag = 1;
-        for (rest_i = 0;rest_i<task_num;rest_i++)
-            for (rest_j = 0;rest_j<task_num;rest_j++)//完全约束矩阵改变前先暂存入完全约束矩阵2中                       
+        for (rest_i = 0;rest_i<t_param.t_num;rest_i++)
+            for (rest_j = 0;rest_j<t_param.t_num;rest_j++)//完全约束矩阵改变前先暂存入完全约束矩阵2中                       
                 restraint_comp2[rest_i][rest_j] = restraint_comp[rest_i][rest_j];
 
-        for (rest_i = 0;rest_i<task_num;rest_i++)
+        for (rest_i = 0;rest_i<t_param.t_num;rest_i++)
         {
-            for (rest_j = 0;rest_j<task_num;rest_j++)//遍历完全约束矩阵                     
+            for (rest_j = 0;rest_j<t_param.t_num;rest_j++)//遍历完全约束矩阵                     
             {
                 if (restraint_comp[rest_i][rest_j] == 1)//将下属约束中的子约束关系加入i的完全约束矩阵中
                 {
-                    for (rest_k = 0;rest_k<task_num;rest_k++)
+                    for (rest_k = 0;rest_k<t_param.t_num;rest_k++)
                     {
                         if (restraint_comp[rest_j][rest_k] == 1)
                         {
@@ -419,11 +427,11 @@ void input_ptts()
                 }
             }
         }
-        for (rest_i = 0;rest_i<task_num;rest_i++)
-            for (rest_j = 0;rest_j<task_num;rest_j++)
+        for (rest_i = 0;rest_i<t_param.t_num;rest_i++)
+            for (rest_j = 0;rest_j<t_param.t_num;rest_j++)
                 if (restraint_comp2[rest_i][rest_j] == restraint_comp[rest_i][rest_j])
                     rest_flag++;
-        if (rest_flag == task_num*task_num + 1)
+        if (rest_flag == t_param.t_num*t_param.t_num + 1)
             rest_flag = 0;
 
     }//while循环结束时，完全约束矩阵(2)已不再变化
@@ -1113,24 +1121,24 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
     double f[2];
     double *x = xreal;
     int i,j,k,x_i,x_j,chri_i,chri_j,chri_k,r_i,r_j,r_k;
-    int m_amount_based_on_t[task_num];//存放对应任务序列的方案可选总数
-    int parallel_r[4*task_num] = {0};//变量含义参见matlab程序
-    int r[4*task_num] = {0};
+    int m_amount_based_on_t[t_param.t_num];//存放对应任务序列的方案可选总数
+    int parallel_r[4*t_param.t_num];//变量含义参见matlab程序
+    int r[4*t_param.t_num];
     int r_constraint = 0;
     int start = 0;
-    int lmd[task_num] = {0};
+    int lmd[t_param.t_num];
     int K = 0;//初始化并行步数
-    int time[task_num] = {0};
-    int r_time[4*task_num] = {0};
-    int parallel_time[task_num] = {0};
-    int parallel_instrument[task_num] = {0};
-    int parallel_time_max[task_num] = {0};
+    int time[t_param.t_num];
+    int r_time[4*t_param.t_num];
+    int parallel_time[t_param.t_num];
+    int parallel_instrument[t_param.t_num];
+    int parallel_time_max[t_param.t_num];
     int max_r_time = 0;
-    int t_time[task_num] = {0};//初始化记录任务开始时间的数组,数组的列是任务号
-    int t_index[task_num] = {0};//将1~task_num个任务在染色体中的下标记录在t_index数组中
+    int t_time[t_param.t_num];//初始化记录任务开始时间的数组,数组的列是任务号
+    int t_index[t_param.t_num];//将1~t_param.t_num个任务在染色体中的下标记录在t_index数组中
 
-    int dag[task_num][task_num+1] = {0};//定义有向无环图DAG，为拓扑排序准备
-    int zero_indegree[task_num] = {0};//存放入度为0的任务编号
+    int dag[t_param.t_num][t_param.t_num+1];//定义有向无环图DAG，为拓扑排序准备
+    int zero_indegree[t_param.t_num];//存放入度为0的任务编号
 
     f[0] = 0;
     f[1] = 0;
@@ -1138,13 +1146,13 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
     start = 0;
     K = 0;
     max_r_time = 0;
-    for (x_i = 0;x_i < 4*task_num;x_i++)
+    for (x_i = 0;x_i < 4*t_param.t_num;x_i++)
     {
         parallel_r[x_i] = 0;//变量含义参见matlab程序
         r[x_i] = 0;
         r_time[x_i] = 0;
     }
-    for (x_i = 0;x_i < task_num;x_i++)
+    for (x_i = 0;x_i < t_param.t_num;x_i++)
     {
         lmd[x_i] = 0;
         time[x_i] = 0;
@@ -1153,21 +1161,21 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
         parallel_time_max[x_i] = 0;
         t_time[x_i] = 0;
     }
-    for (x_i = 0;x_i < task_num;x_i++)//初始化图为空图
+    for (x_i = 0;x_i < t_param.t_num;x_i++)//初始化图为空图
     {
-        for (x_j = 0;x_j < task_num+1;x_j++)
+        for (x_j = 0;x_j < t_param.t_num+1;x_j++)
         {
             dag[x_i][x_j] = 0;
         }
     }
-    for (x_i = 0;x_i < task_num;x_i++)//初始化图为约束图
+    for (x_i = 0;x_i < t_param.t_num;x_i++)//初始化图为约束图
     {
-        for (x_j = 0;x_j < task_num;x_j++)
+        for (x_j = 0;x_j < t_param.t_num;x_j++)
         {
             dag[x_i][x_j] = restraint_comp[x_i][x_j];
             if (dag[x_i][x_j] == -1)
             {
-                dag[x_i][task_num]++;
+                dag[x_i][t_param.t_num]++;
             }
         }
     }
@@ -1180,25 +1188,25 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
     //x[5] = 0.23558;
 
     //初始化
-    chri.t = (int*)malloc(sizeof(int) * task_num);
-    chri.m = (int*)malloc(sizeof(int) * task_num);
-    for (chri_i=0;chri_i<task_num;chri_i++)
+    chri.t = (int*)malloc(sizeof(int) * t_param.t_num);
+    chri.m = (int*)malloc(sizeof(int) * t_param.t_num);
+    for (chri_i=0;chri_i<t_param.t_num;chri_i++)
     {
         chri.t[chri_i] = 1;
         chri.m[chri_i] = 0;
     }
 
     //得到任务序列
-    //for (chri_i=0;chri_i<task_num;chri_i++)
-    //  for (chri_j=0;chri_j<task_num;chri_j++)
+    //for (chri_i=0;chri_i<t_param.t_num;chri_i++)
+    //  for (chri_j=0;chri_j<t_param.t_num;chri_j++)
     //      if (x[chri_j]<x[chri_i])
     //          chri.t[chri_i]++;//chri.t中放的是任务号
-    for (chri_i=0;chri_i<task_num;chri_i++)//求任务序列
+    for (chri_i=0;chri_i<t_param.t_num;chri_i++)//求任务序列
     {
         x_j = 0;//设置zero_indegree数组下标
-        for (x_i = 0;x_i < task_num;x_i++)
+        for (x_i = 0;x_i < t_param.t_num;x_i++)
         {
-            if (dag[x_i][task_num] == 0)//记录入度为0的任务编号到zero_indegree
+            if (dag[x_i][t_param.t_num] == 0)//记录入度为0的任务编号到zero_indegree
             {
                 zero_indegree[x_j] = x_i;
                 x_j++;
@@ -1213,18 +1221,18 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
                 chri.t[chri_i] = zero_indegree[x_i];
             }
         }
-        dag[chri.t[chri_i]][task_num]--;
-        for (x_i = 0;x_i < task_num;x_i++)
+        dag[chri.t[chri_i]][t_param.t_num]--;
+        for (x_i = 0;x_i < t_param.t_num;x_i++)
         {
             if (dag[x_i][chri.t[chri_i]] == -1)
-                dag[x_i][task_num]--;
+                dag[x_i][t_param.t_num]--;
         }
     }
-    for (chri_i=0;chri_i<task_num;chri_i++)
+    for (chri_i=0;chri_i<t_param.t_num;chri_i++)
         chri.t[chri_i]++;
 
     //得到方案号
-    for (chri_i=0;chri_i<task_num;chri_i++)
+    for (chri_i=0;chri_i<t_param.t_num;chri_i++)
     {
         chri_k = 1;
         while (meth[chri.t[chri_i]].m[chri_k])
@@ -1251,7 +1259,7 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
     */
 
     /********求目标函数*********/
-    for (chri_i=0;chri_i<task_num;chri_i++)//遍历所有任务
+    for (chri_i=0;chri_i<t_param.t_num;chri_i++)//遍历所有任务
     {
         //先按照资源冲突设置任务开始时间    
         chri_k = 0;
@@ -1299,13 +1307,13 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
     //目标函数1是最大仪器占用时间，即测试时间
     //f[0] = 0;
     f[0] = r_time[0];
-    for (chri_k=0;chri_k<4*task_num;chri_k++)
+    for (chri_k=0;chri_k<4*t_param.t_num;chri_k++)
         if (f[0] < r_time[chri_k])
             f[0] = r_time[chri_k];
 
     //目标函数2为所有机器的各步平均负荷最小
     //f[1] = 0;                                                             
-    //for (chri_i=0;chri_i<task_num;chri_i++)
+    //for (chri_i=0;chri_i<t_param.t_num;chri_i++)
     //{
     //  //记录任务占用资源总数
     //  chri_k = 0;
@@ -1318,9 +1326,9 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
 
     //目标函数3是约束违反个数
     f[1] = 0;//初始化约束违反个数
-    for (chri_i=0;chri_i<task_num;chri_i++)//遍历所有任务
+    for (chri_i=0;chri_i<t_param.t_num;chri_i++)//遍历所有任务
     {
-        for (chri_j=0;chri_j<task_num;chri_j++)//遍历染色体的t数组
+        for (chri_j=0;chri_j<t_param.t_num;chri_j++)//遍历染色体的t数组
         {
             if (chri.t[chri_j] == (chri_i + 1))//若找到任务i的位置，则记录其下标
             {
@@ -1328,9 +1336,9 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
             }
         }
     }
-    for (chri_i=0;chri_i<task_num;chri_i++)
+    for (chri_i=0;chri_i<t_param.t_num;chri_i++)
     {
-        for (chri_j=0;chri_j<task_num;chri_j++)//遍历完全约束矩阵
+        for (chri_j=0;chri_j<t_param.t_num;chri_j++)//遍历完全约束矩阵
         {
             //若任务i>任务j，且任务i的下标在任务j之后，则说明违反了一条约束关系
             if (restraint_comp[chri_i][chri_j] == 1 && t_index[chri_i] > t_index[chri_j])
