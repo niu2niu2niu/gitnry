@@ -11,6 +11,13 @@
 
 typedef struct
 {
+    int *m;
+    int *time;
+    int **r;
+}method;
+
+typedef struct
+{
     int *t;
     int *m;
 
@@ -52,6 +59,9 @@ typedef struct
 }task_param;
 
 extern task_param t_param;
+extern method *meth;
+extern int **restraint;
+extern int **restraint_comp;
 
 extern int nreal;
 extern int nbin;

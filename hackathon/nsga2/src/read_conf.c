@@ -17,6 +17,7 @@ void read_run_param(FILE *f)
     char line[MAX_LINE];
     while (fgets(line, MAX_LINE, f))
     {
+        if (line[0] == '#') continue;
         char *name = strtok(line, "=");
         char *value = strtok(NULL, "=");
         if (strcmp(name, "seed") == 0)
@@ -44,10 +45,11 @@ void read_run_param(FILE *f)
         if (strcmp(name, "prob_name") == 0)
             strcpy(prob_name, value);
     }
+    //printf("prob_name: %s\n", prob_name);
     return;
 }
 
-void read_ptts_param(FILE *f)
+void read_prob_param(FILE *f)
 {
     char line[MAX_LINE];
     while (fgets(line, MAX_LINE, f))
@@ -61,5 +63,8 @@ void read_ptts_param(FILE *f)
         if (strcmp(name, "r_max_num") == 0)
             t_param.r_max_num = atoi(value);
     }
+    printf("t_num: %d\n", t_param.t_num);
+    printf("meth_num: %d\n", t_param.meth_num);
+    printf("r_max_num: %d\n", t_param.r_max_num);
     return;
 }

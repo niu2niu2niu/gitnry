@@ -7,25 +7,12 @@
 # include "rand.h"
 # include "read_conf.h"
 
-//task_param t_param;
-
-typedef struct
-{
-    int *m;
-    int *time;
-    int **r;
-}method;
-
 method *meth;
 int **restraint;
 int **restraint_comp;
 
-void allocate_ptts()
+void allocate_prob()
 {
-//    t_param.t_num = 20;
-//    t_param.meth_num = 6;
-//    t_param.r_max_num = 4;
-
     int i = 0;
     meth = (method*)malloc(sizeof(method) * (t_param.t_num + 1));
     for(i = 0; i < t_param.t_num + 1; i++)
@@ -48,7 +35,7 @@ void allocate_ptts()
         restraint_comp[i] = restraint_comp[i - 1] + t_param.t_num;
 }
 
-void deallocate_ptts()
+void deallocate_prob()
 {
     int i = 0;
     for(i = 0; i < t_param.t_num + 1; i++)
@@ -638,7 +625,9 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
 
 void test_problem (individual *ind)
 {
-    if (strcmp(prob_name, "ptts"))
+    if (strcmp(prob_name, "ptts\n") == 0)
+        test_problem_ptts(ind->xreal, ind->xbin, ind->gene, ind->obj, ind->constr, ind->chri);
+    else if (strcmp(prob_name, "cook\n") == 0)
         test_problem_ptts(ind->xreal, ind->xbin, ind->gene, ind->obj, ind->constr, ind->chri);
     return;
 }

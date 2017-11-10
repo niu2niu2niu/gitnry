@@ -266,15 +266,26 @@ int main (int argc, char **argv)
     nrealmut = 0;
     nbincross = 0;
     nrealcross = 0;
-    if (strcmp(prob_name, "ptts"))
+
+    FILE *fpt_prob_param;
+    if (strcmp(prob_name, "ptts\n") == 0)
     {
-        FILE *fpt_ptts_param;
-        fpt_ptts_param = fopen("input_data_param/ptts_param.txt", "r");
-        read_ptts_param(fpt_ptts_param);
-        fclose(fpt_ptts_param);
-        allocate_ptts();
+        fpt_prob_param = fopen("input_data_param/ptts_param.txt", "r");
+        read_prob_param(fpt_prob_param);
+        allocate_prob();
         input_ptts();
+//        printf("prob ptts\n");
     }
+    else if (strcmp(prob_name, "cook\n") == 0)
+    {
+        fpt_prob_param = fopen("input_data_param/cook_param.txt", "r");
+        read_prob_param(fpt_prob_param);
+        allocate_prob();
+        input_ptts();
+        printf("prob cook\n");
+    }
+    fclose(fpt_prob_param);
+
     parent_pop = (population *)malloc(sizeof(population));
     child_pop = (population *)malloc(sizeof(population));
     mixed_pop = (population *)malloc(sizeof(population));
@@ -354,9 +365,13 @@ int main (int argc, char **argv)
     free (parent_pop);
     free (child_pop);
     free (mixed_pop);
-    if (strcmp(prob_name, "ptts"))
+    if (strcmp(prob_name, "ptts\n") == 0)
     {
-        deallocate_ptts();
+        deallocate_prob();
+    }
+    else if (strcmp(prob_name, "cook\n") == 0)
+    {
+        deallocate_prob();
     }
     printf(" Routine successfully exited \n");
     return (0);

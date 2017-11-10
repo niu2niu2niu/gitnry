@@ -7,4 +7,4 @@
 
 extern char prob_name[];
 void read_run_param(FILE *conf);
-void read_ptts_param(FILE *f);
+void read_prob_param(FILE *f);
