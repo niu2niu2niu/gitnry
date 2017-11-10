@@ -7,7 +7,7 @@
 
 # include "global.h"
 # include "rand.h"
-# include "read_conf.h"
+# include "read_file.h"
 
 int nreal;
 int nbin;
@@ -46,7 +46,6 @@ int main (int argc, char **argv)
     FILE *fpt3;
     FILE *fpt4;
     FILE *fpt5;
-    FILE *fpt_run_param;
     population *parent_pop;
     population *child_pop;
     population *mixed_pop;
@@ -55,14 +54,12 @@ int main (int argc, char **argv)
     fpt3 = fopen("output/best_pop.out","w");
     fpt4 = fopen("output/all_pop.out","w");
     fpt5 = fopen("output/params.out","w");
-    fpt_run_param = fopen("input_data_param/run_param.txt","r");
     fprintf(fpt1,"# This file contains the data of initial population\n");
     fprintf(fpt2,"# This file contains the data of final population\n");
     fprintf(fpt3,"# This file contains the data of final feasible population (if found)\n");
     fprintf(fpt4,"# This file contains the data of all generations\n");
     fprintf(fpt5,"# This file contains information about inputs as read by the program\n");
-    read_run_param(fpt_run_param);
-    fclose(fpt_run_param);
+    read_run_param();
     if (seed<=0.0 || seed>=1.0)
     {
         printf("\n Entered seed value is wrong, seed value must be in (0,1) \n");
@@ -267,24 +264,19 @@ int main (int argc, char **argv)
     nbincross = 0;
     nrealcross = 0;
 
-    FILE *fpt_prob_param;
+    read_prob_param();
+    allocate_prob();
+
     if (strcmp(prob_name, "ptts\n") == 0)
     {
-        fpt_prob_param = fopen("input_data_param/ptts_param.txt", "r");
-        read_prob_param(fpt_prob_param);
-        allocate_prob();
         input_ptts();
-//        printf("prob ptts\n");
+        //printf("prob ptts\n");
     }
     else if (strcmp(prob_name, "cook\n") == 0)
     {
-        fpt_prob_param = fopen("input_data_param/cook_param.txt", "r");
-        read_prob_param(fpt_prob_param);
-        allocate_prob();
         input_ptts();
         printf("prob cook\n");
     }
-    fclose(fpt_prob_param);
 
     parent_pop = (population *)malloc(sizeof(population));
     child_pop = (population *)malloc(sizeof(population));
@@ -365,14 +357,7 @@ int main (int argc, char **argv)
     free (parent_pop);
     free (child_pop);
     free (mixed_pop);
-    if (strcmp(prob_name, "ptts\n") == 0)
-    {
-        deallocate_prob();
-    }
-    else if (strcmp(prob_name, "cook\n") == 0)
-    {
-        deallocate_prob();
-    }
+    deallocate_prob();
     printf(" Routine successfully exited \n");
     return (0);
 }

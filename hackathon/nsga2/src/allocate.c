@@ -7,6 +7,10 @@
 # include "global.h"
 # include "rand.h"
 
+method *meth;
+int **restraint;
+int **restraint_comp;
+
 /* Function to allocate memory to a population */
 void allocate_memory_pop (population *pop, int size)
 {
@@ -83,4 +87,46 @@ void deallocate_memory_ind (individual *ind)
         free(ind->constr);
     }
     return;
+}
+
+void allocate_prob()
+{
+    int i = 0;
+    meth = (method*)malloc(sizeof(method) * (t_param.t_num + 1));
+    for(i = 0; i < t_param.t_num + 1; i++)
+    {
+        meth[i].m = (int*)malloc(sizeof(int) * t_param.meth_num);
+        meth[i].time = (int*)malloc(sizeof(int) * t_param.meth_num);
+        meth[i].r = (int**)malloc(sizeof(int*) * t_param.meth_num);
+        for(int j = 0; j < t_param.meth_num; j++)
+            meth[i].r[j] = (int*)malloc(sizeof(int) * t_param.r_max_num);
+    }
+
+    restraint = (int**)malloc(sizeof(int*) * t_param.t_num);
+    restraint[0] = (int*)malloc(sizeof(int) * t_param.t_num * t_param.t_num);
+    for(i = 1; i < t_param.t_num; i++)
+        restraint[i] = restraint[i - 1] + t_param.t_num;
+
+    restraint_comp = (int**)malloc(sizeof(int*) * t_param.t_num);
+    restraint_comp[0] = (int*)malloc(sizeof(int) * t_param.t_num * t_param.t_num);
+    for (i = 1; i < t_param.t_num; i++)
+        restraint_comp[i] = restraint_comp[i - 1] + t_param.t_num;
+}
+
+void deallocate_prob()
+{
+    int i = 0;
+    for(i = 0; i < t_param.t_num + 1; i++)
+    {
+        free(meth[i].m);
+        free(meth[i].time);
+        for(int j = 0; j < t_param.meth_num; j++)
+            free(meth[i].r[j]);
+        free(meth[i].r);
+    }
+    free(meth);
+    free(restraint[0]);
+    free(restraint);
+    free(restraint_comp[0]);
+    free(restraint_comp);
 }

@@ -5,53 +5,6 @@
 
 # include "global.h"
 # include "rand.h"
-# include "read_conf.h"
-
-method *meth;
-int **restraint;
-int **restraint_comp;
-
-void allocate_prob()
-{
-    int i = 0;
-    meth = (method*)malloc(sizeof(method) * (t_param.t_num + 1));
-    for(i = 0; i < t_param.t_num + 1; i++)
-    {
-        meth[i].m = (int*)malloc(sizeof(int) * t_param.meth_num);
-        meth[i].time = (int*)malloc(sizeof(int) * t_param.meth_num);
-        meth[i].r = (int**)malloc(sizeof(int*) * t_param.meth_num);
-        for(int j = 0; j < t_param.meth_num; j++)
-            meth[i].r[j] = (int*)malloc(sizeof(int) * t_param.r_max_num);
-    }
-
-    restraint = (int**)malloc(sizeof(int*) * t_param.t_num);
-    restraint[0] = (int*)malloc(sizeof(int) * t_param.t_num * t_param.t_num);
-    for(i = 1; i < t_param.t_num; i++)
-        restraint[i] = restraint[i - 1] + t_param.t_num;
-
-    restraint_comp = (int**)malloc(sizeof(int*) * t_param.t_num);
-    restraint_comp[0] = (int*)malloc(sizeof(int) * t_param.t_num * t_param.t_num);
-    for (i = 1; i < t_param.t_num; i++)
-        restraint_comp[i] = restraint_comp[i - 1] + t_param.t_num;
-}
-
-void deallocate_prob()
-{
-    int i = 0;
-    for(i = 0; i < t_param.t_num + 1; i++)
-    {
-        free(meth[i].m);
-        free(meth[i].time);
-        for(int j = 0; j < t_param.meth_num; j++)
-            free(meth[i].r[j]);
-        free(meth[i].r);
-    }
-    free(meth);
-    free(restraint[0]);
-    free(restraint);
-    free(restraint_comp[0]);
-    free(restraint_comp);
-}
 
 void input_ptts()
 {
@@ -384,9 +337,15 @@ void input_ptts()
     free(restraint_comp2);
 }
 
-void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, double *constr, 
-        chr chri)
+void test_problem(individual *ind)
 {
+    double *xreal = ind->xreal;
+    //double *xbin = ind->xbin;
+    //int **gene = ind->gene;
+    double *obj = ind->obj;
+    //double *constr = ind->constr;
+    chr chri = ind->chri;
+
     double f[2] = {0.0, 0.0};
     double *x = xreal;
     int x_i,x_j;
@@ -620,14 +579,5 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
 
     obj[0] = f[0];
     obj[1] = f[1];
-    return;
-}
-
-void test_problem (individual *ind)
-{
-    if (strcmp(prob_name, "ptts\n") == 0)
-        test_problem_ptts(ind->xreal, ind->xbin, ind->gene, ind->obj, ind->constr, ind->chri);
-    else if (strcmp(prob_name, "cook\n") == 0)
-        test_problem_ptts(ind->xreal, ind->xbin, ind->gene, ind->obj, ind->constr, ind->chri);
     return;
 }

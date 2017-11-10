@@ -4,7 +4,7 @@
 
 #include "global.h"
 #include "rand.h"
-#include "read_conf.h"
+#include "read_file.h"
 
 #define MAX_LINE 1024
 
@@ -12,8 +12,10 @@ char prob_name[MAX_LINE];
 
 task_param t_param;
 
-void read_run_param(FILE *f)
+void read_run_param()
 {
+    FILE *f;
+    f = fopen("input_data_param/run_param.txt","r");
     char line[MAX_LINE];
     while (fgets(line, MAX_LINE, f))
     {
@@ -46,11 +48,17 @@ void read_run_param(FILE *f)
             strcpy(prob_name, value);
     }
     //printf("prob_name: %s\n", prob_name);
+    fclose(f);
     return;
 }
 
-void read_prob_param(FILE *f)
+void read_prob_param()
 {
+    FILE *f;
+    if (strcmp(prob_name, "ptts\n") == 0)
+        f = fopen("input_data_param/ptts_param.txt", "r");
+    else if (strcmp(prob_name, "cook\n") == 0)
+        f = fopen("input_data_param/cook_param.txt", "r");
     char line[MAX_LINE];
     while (fgets(line, MAX_LINE, f))
     {
@@ -66,5 +74,6 @@ void read_prob_param(FILE *f)
     printf("t_num: %d\n", t_param.t_num);
     printf("meth_num: %d\n", t_param.meth_num);
     printf("r_max_num: %d\n", t_param.r_max_num);
+    fclose(f);
     return;
 }
