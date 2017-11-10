@@ -1118,47 +1118,48 @@ void test_problem_ctp8 (double *xreal, double *xbin, int **gene, double *obj, do
 
 void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, double *constr)
 {
-    double f[2];
+    double f[2] = {0.0, 0.0};
     double *x = xreal;
-    int i,j,k,x_i,x_j,chri_i,chri_j,chri_k,r_i,r_j,r_k;
+    int x_i,x_j;
+    int chri_i,chri_j,chri_k;
     int m_amount_based_on_t[t_param.t_num];//存放对应任务序列的方案可选总数
-    int parallel_r[4*t_param.t_num];//变量含义参见matlab程序
-    int r[4*t_param.t_num];
-    int r_constraint = 0;
-    int start = 0;
-    int lmd[t_param.t_num];
-    int K = 0;//初始化并行步数
-    int time[t_param.t_num];
-    int r_time[4*t_param.t_num];
-    int parallel_time[t_param.t_num];
-    int parallel_instrument[t_param.t_num];
-    int parallel_time_max[t_param.t_num];
+    int r_time[t_param.r_max_num * t_param.t_num];
     int max_r_time = 0;
     int t_time[t_param.t_num];//初始化记录任务开始时间的数组,数组的列是任务号
-    int t_index[t_param.t_num];//将1~t_param.t_num个任务在染色体中的下标记录在t_index数组中
-
-    int dag[t_param.t_num][t_param.t_num+1];//定义有向无环图DAG，为拓扑排序准备
+    int dag[t_param.t_num][t_param.t_num + 1];//定义有向无环图DAG，为拓扑排序准备
     int zero_indegree[t_param.t_num];//存放入度为0的任务编号
 
-    f[0] = 0;
-    f[1] = 0;
-    r_constraint = 0;
-    start = 0;
-    K = 0;
+//    int i,j,k;
+//    int r_i,r_j,r_k;
+//    int parallel_r[t_param.r_max_num * t_param.t_num];//变量含义参见matlab程序
+//    int r[t_param.r_max_num * t_param.t_num];
+//    int r_constraint = 0;
+//    int start = 0;
+//    int K = 0;//初始化并行步数
+//    int lmd[t_param.t_num];
+//    int time[t_param.t_num];
+//    int parallel_time[t_param.t_num];
+//    int parallel_instrument[t_param.t_num];
+//    int parallel_time_max[t_param.t_num];
+//    int t_index[t_param.t_num];//将1~t_param.t_num个任务在染色体中的下标记录在t_index数组中
+//    r_constraint = 0;
+//    start = 0;
+//    K = 0;
+
     max_r_time = 0;
-    for (x_i = 0;x_i < 4*t_param.t_num;x_i++)
+    for (x_i = 0;x_i < t_param.r_max_num * t_param.t_num;x_i++)
     {
-        parallel_r[x_i] = 0;//变量含义参见matlab程序
-        r[x_i] = 0;
+//        parallel_r[x_i] = 0;//变量含义参见matlab程序
+//        r[x_i] = 0;
         r_time[x_i] = 0;
     }
     for (x_i = 0;x_i < t_param.t_num;x_i++)
     {
-        lmd[x_i] = 0;
-        time[x_i] = 0;
-        parallel_time[x_i] = 0;
-        parallel_instrument[x_i] = 0;
-        parallel_time_max[x_i] = 0;
+//        lmd[x_i] = 0;
+//        time[x_i] = 0;
+//        parallel_time[x_i] = 0;
+//        parallel_instrument[x_i] = 0;
+//        parallel_time_max[x_i] = 0;
         t_time[x_i] = 0;
     }
     for (x_i = 0;x_i < t_param.t_num;x_i++)//初始化图为空图
@@ -1284,15 +1285,15 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
             }
         }
 
-        //计算并行步数
-        chri_k = 0;
-        for (chri_j=0;chri_j<chri_i+1;chri_j++)//遍历第i个任务之前的任务
-        {
-            if (t_time[chri.t[chri_j]-1] != t_time[chri.t[chri_i]-1])
-                chri_k++;
-        }
-        if (chri_k == chri_i)//如果在任务i之前的所有任务中没有和其开始时间相同的任务，则并行步数加1
-            K++;                                    
+//        //计算并行步数
+//        chri_k = 0;
+//        for (chri_j=0;chri_j<chri_i+1;chri_j++)//遍历第i个任务之前的任务
+//        {
+//            if (t_time[chri.t[chri_j]-1] != t_time[chri.t[chri_i]-1])
+//                chri_k++;
+//        }
+//        if (chri_k == chri_i)//如果在任务i之前的所有任务中没有和其开始时间相同的任务，则并行步数加1
+//            K++;                                    
 
         //修正仪器时间
         chri_j = 0;
@@ -1307,46 +1308,46 @@ void test_problem_ptts(double *xreal, double *xbin, int **gene, double *obj, dou
     //目标函数1是最大仪器占用时间，即测试时间
     //f[0] = 0;
     f[0] = r_time[0];
-    for (chri_k=0;chri_k<4*t_param.t_num;chri_k++)
+    for (chri_k=0;chri_k<t_param.r_max_num * t_param.t_num;chri_k++)
         if (f[0] < r_time[chri_k])
             f[0] = r_time[chri_k];
 
-    //目标函数2为所有机器的各步平均负荷最小
-    //f[1] = 0;                                                             
-    //for (chri_i=0;chri_i<t_param.t_num;chri_i++)
-    //{
-    //  //记录任务占用资源总数
-    //  chri_k = 0;
-    //  while (meth[chri.t[chri_i]].r[chri.m[chri_i]][chri_k+1])
-    //      chri_k++;
-    //  //计算总负载
-    //  parallel_time[0] = parallel_time[0] + meth[chri.t[chri_i]].time[chri.m[chri_i]]*(chri_k);
-    //}
-    //f[1] = parallel_time[0] / (float)K;//计算各步平均负载
-
-    //目标函数3是约束违反个数
-    f[1] = 0;//初始化约束违反个数
-    for (chri_i=0;chri_i<t_param.t_num;chri_i++)//遍历所有任务
-    {
-        for (chri_j=0;chri_j<t_param.t_num;chri_j++)//遍历染色体的t数组
-        {
-            if (chri.t[chri_j] == (chri_i + 1))//若找到任务i的位置，则记录其下标
-            {
-                t_index[chri_i] = chri_j;
-            }
-        }
-    }
-    for (chri_i=0;chri_i<t_param.t_num;chri_i++)
-    {
-        for (chri_j=0;chri_j<t_param.t_num;chri_j++)//遍历完全约束矩阵
-        {
-            //若任务i>任务j，且任务i的下标在任务j之后，则说明违反了一条约束关系
-            if (restraint_comp[chri_i][chri_j] == 1 && t_index[chri_i] > t_index[chri_j])
-            {
-                f[1]++;
-            }
-        }
-    }
+//    //目标函数2为所有机器的各步平均负荷最小
+//    f[1] = 0;                                                             
+//    for (chri_i=0;chri_i<t_param.t_num;chri_i++)
+//    {
+//      //记录任务占用资源总数
+//      chri_k = 0;
+//      while (meth[chri.t[chri_i]].r[chri.m[chri_i]][chri_k+1])
+//          chri_k++;
+//      //计算总负载
+//      parallel_time[0] = parallel_time[0] + meth[chri.t[chri_i]].time[chri.m[chri_i]]*(chri_k);
+//    }
+//    f[1] = parallel_time[0] / (float)K;//计算各步平均负载
+//
+//    //目标函数3是约束违反个数
+//    f[1] = 0;//初始化约束违反个数
+//    for (chri_i=0;chri_i<t_param.t_num;chri_i++)//遍历所有任务
+//    {
+//        for (chri_j=0;chri_j<t_param.t_num;chri_j++)//遍历染色体的t数组
+//        {
+//            if (chri.t[chri_j] == (chri_i + 1))//若找到任务i的位置，则记录其下标
+//            {
+//                t_index[chri_i] = chri_j;
+//            }
+//        }
+//    }
+//    for (chri_i=0;chri_i<t_param.t_num;chri_i++)
+//    {
+//        for (chri_j=0;chri_j<t_param.t_num;chri_j++)//遍历完全约束矩阵
+//        {
+//            //若任务i>任务j，且任务i的下标在任务j之后，则说明违反了一条约束关系
+//            if (restraint_comp[chri_i][chri_j] == 1 && t_index[chri_i] > t_index[chri_j])
+//            {
+//                f[1]++;
+//            }
+//        }
+//    }
 
     obj[0] = f[0];
     obj[1] = f[1];

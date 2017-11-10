@@ -124,4 +124,7 @@ void q_sort_dist(population *pop, int *dist, int left, int right);
 void selection (population *old_pop, population *new_pop);
 individual* tournament (individual *ind1, individual *ind2);
 
+// my
+
+
 # endif
