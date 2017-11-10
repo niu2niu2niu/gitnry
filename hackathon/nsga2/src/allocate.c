@@ -26,6 +26,8 @@ void allocate_memory_ind (individual *ind)
     if (nreal != 0)
     {
         ind->xreal = (double *)malloc(nreal*sizeof(double));
+        ind->chri.t = (int*)malloc(sizeof(int) * t_param.t_num);
+        ind->chri.m = (int*)malloc(sizeof(int) * t_param.t_num);
     }
     if (nbin != 0)
     {
@@ -63,6 +65,8 @@ void deallocate_memory_ind (individual *ind)
     if (nreal != 0)
     {
         free(ind->xreal);
+        free(ind->chri.t);
+        free(ind->chri.m);
     }
     if (nbin != 0)
     {

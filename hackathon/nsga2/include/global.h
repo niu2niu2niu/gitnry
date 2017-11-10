@@ -11,6 +11,13 @@
 
 typedef struct
 {
+    int *t;
+    int *m;
+
+}chr;
+
+typedef struct
+{
     int rank;
     double constr_violation;
     double *xreal;
@@ -19,6 +26,7 @@ typedef struct
     double *obj;
     double *constr;
     double crowd_dist;
+    chr chri;
 }
 individual;
 
@@ -35,6 +43,15 @@ typedef struct lists
     struct lists *child;
 }
 list;
+
+typedef struct
+{
+    int t_num;
+    int meth_num;
+    int r_max_num;
+}task_param;
+
+extern task_param t_param;
 
 extern int nreal;
 extern int nbin;
@@ -108,7 +125,7 @@ void mutation_ind (individual *ind);
 void bin_mutate_ind (individual *ind);
 void real_mutate_ind (individual *ind);
 
-void test_problem (double *xreal, double *xbin, int **gene, double *obj, double *constr);
+void test_problem (individual *ind);
 
 void assign_rank_and_crowding_distance (population *new_pop);
 

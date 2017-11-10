@@ -55,7 +55,7 @@ int main (int argc, char **argv)
     fpt3 = fopen("output/best_pop.out","w");
     fpt4 = fopen("output/all_pop.out","w");
     fpt5 = fopen("output/params.out","w");
-    fpt_conf = fopen("param.txt","r");
+    fpt_conf = fopen("input_data_param/run_param.txt","r");
     fprintf(fpt1,"# This file contains the data of initial population\n");
     fprintf(fpt2,"# This file contains the data of final population\n");
     fprintf(fpt3,"# This file contains the data of final feasible population (if found)\n");
@@ -266,6 +266,11 @@ int main (int argc, char **argv)
     nrealmut = 0;
     nbincross = 0;
     nrealcross = 0;
+    if (strcmp(prob_name, "ptts"))
+    {
+        allocate_ptts();
+        input_ptts();
+    }
     parent_pop = (population *)malloc(sizeof(population));
     child_pop = (population *)malloc(sizeof(population));
     mixed_pop = (population *)malloc(sizeof(population));
@@ -273,11 +278,6 @@ int main (int argc, char **argv)
     allocate_memory_pop (child_pop, popsize);
     allocate_memory_pop (mixed_pop, 2*popsize);
     randomize();
-    if (strcmp(prob_name, "ptts"))
-    {
-        allocate_ptts();
-        input_ptts();
-    }
     initialize_pop (parent_pop);
     printf(" Initialization done, now performing first generation\n");
     decode_pop(parent_pop);
