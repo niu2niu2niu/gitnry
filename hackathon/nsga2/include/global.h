@@ -8,6 +8,7 @@
 # define E  2.71828182845905
 # define PI 3.14159265358979
 # define GNUPLOT_COMMAND "gnuplot -persist"
+# define MAX_LINE 1024
 
 typedef struct
 {
@@ -58,6 +59,7 @@ typedef struct
     int r_max_num;
 }task_param;
 
+extern char prob_name[MAX_LINE];
 extern task_param t_param;
 extern method *meth;
 extern int **restraint;

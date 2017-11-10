@@ -1,10 +1,64 @@
 /* Test problem definitions */
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
 # include <math.h>
 
 # include "global.h"
 # include "rand.h"
+
+void restraint_complete()
+{
+    int rest_i=0;
+    int rest_j=0;
+    int rest_k=0;
+    int rest_flag=1;
+    int **restraint_comp2 = (int**)malloc(sizeof(int*) * t_param.t_num);
+    restraint_comp2[0] = (int*)malloc(sizeof(int) * t_param.t_num * t_param.t_num);
+    for (rest_i = 1;rest_i<t_param.t_num;rest_i++)
+    {
+        restraint_comp2[rest_i] = restraint_comp2[rest_i - 1] + t_param.t_num;
+    }
+    //计算完全约束矩阵
+    for (rest_i = 0;rest_i<t_param.t_num;rest_i++)
+        for (rest_j = 0;rest_j<t_param.t_num;rest_j++)
+            restraint_comp[rest_i][rest_j] = restraint[rest_i][rest_j];//初始化完全约束矩阵
+
+    while (rest_flag)//若完全约束矩阵改变，则继续改变
+    {
+        rest_flag = 1;
+        for (rest_i = 0;rest_i<t_param.t_num;rest_i++)
+            for (rest_j = 0;rest_j<t_param.t_num;rest_j++)//完全约束矩阵改变前先暂存入完全约束矩阵2中                       
+                restraint_comp2[rest_i][rest_j] = restraint_comp[rest_i][rest_j];
+
+        for (rest_i = 0;rest_i<t_param.t_num;rest_i++)
+        {
+            for (rest_j = 0;rest_j<t_param.t_num;rest_j++)//遍历完全约束矩阵                     
+            {
+                if (restraint_comp[rest_i][rest_j] == 1)//将下属约束中的子约束关系加入i的完全约束矩阵中
+                {
+                    for (rest_k = 0;rest_k<t_param.t_num;rest_k++)
+                    {
+                        if (restraint_comp[rest_j][rest_k] == 1)
+                        {
+                            restraint_comp[rest_i][rest_k] = 1;
+                            restraint_comp[rest_k][rest_i] = -1;
+                        }
+                    }
+                }
+            }
+        }
+        for (rest_i = 0;rest_i<t_param.t_num;rest_i++)
+            for (rest_j = 0;rest_j<t_param.t_num;rest_j++)
+                if (restraint_comp2[rest_i][rest_j] == restraint_comp[rest_i][rest_j])
+                    rest_flag++;
+        if (rest_flag == t_param.t_num*t_param.t_num + 1)
+            rest_flag = 0;
+
+    }//while循环结束时，完全约束矩阵(2)已不再变化
+    free(restraint_comp2[0]);
+    free(restraint_comp2);
+}
 
 void input_ptts()
 {
@@ -286,55 +340,21 @@ void input_ptts()
     restraint[16-1][20-1] = 1;// t16 > t20
     restraint[20-1][16-1] = -1;
 
-    int rest_i=0;
-    int rest_j=0;
-    int rest_k=0;
-    int rest_flag=1;
-    int **restraint_comp2 = (int**)malloc(sizeof(int*) * t_param.t_num);
-    restraint_comp2[0] = (int*)malloc(sizeof(int) * t_param.t_num * t_param.t_num);
-    for (rest_i = 1;rest_i<t_param.t_num;rest_i++)
-    {
-        restraint_comp2[rest_i] = restraint_comp2[rest_i - 1] + t_param.t_num;
-    }
-    //计算完全约束矩阵
-    for (rest_i = 0;rest_i<t_param.t_num;rest_i++)
-        for (rest_j = 0;rest_j<t_param.t_num;rest_j++)
-            restraint_comp[rest_i][rest_j] = restraint[rest_i][rest_j];//初始化完全约束矩阵
+    restraint_complete();
+}
 
-    while (rest_flag)//若完全约束矩阵改变，则继续改变
-    {
-        rest_flag = 1;
-        for (rest_i = 0;rest_i<t_param.t_num;rest_i++)
-            for (rest_j = 0;rest_j<t_param.t_num;rest_j++)//完全约束矩阵改变前先暂存入完全约束矩阵2中                       
-                restraint_comp2[rest_i][rest_j] = restraint_comp[rest_i][rest_j];
+void input_cook()
+{
+    return;
+}
 
-        for (rest_i = 0;rest_i<t_param.t_num;rest_i++)
-        {
-            for (rest_j = 0;rest_j<t_param.t_num;rest_j++)//遍历完全约束矩阵                     
-            {
-                if (restraint_comp[rest_i][rest_j] == 1)//将下属约束中的子约束关系加入i的完全约束矩阵中
-                {
-                    for (rest_k = 0;rest_k<t_param.t_num;rest_k++)
-                    {
-                        if (restraint_comp[rest_j][rest_k] == 1)
-                        {
-                            restraint_comp[rest_i][rest_k] = 1;
-                            restraint_comp[rest_k][rest_i] = -1;
-                        }
-                    }
-                }
-            }
-        }
-        for (rest_i = 0;rest_i<t_param.t_num;rest_i++)
-            for (rest_j = 0;rest_j<t_param.t_num;rest_j++)
-                if (restraint_comp2[rest_i][rest_j] == restraint_comp[rest_i][rest_j])
-                    rest_flag++;
-        if (rest_flag == t_param.t_num*t_param.t_num + 1)
-            rest_flag = 0;
-
-    }//while循环结束时，完全约束矩阵(2)已不再变化
-    free(restraint_comp2[0]);
-    free(restraint_comp2);
+void input_prob()
+{
+    if (strcmp(prob_name, "ptts\n") == 0)
+        input_ptts();
+    else if (strcmp(prob_name, "cook\n") == 0)
+        input_cook();
+    return;
 }
 
 void test_problem(individual *ind)

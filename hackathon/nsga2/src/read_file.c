@@ -6,11 +6,10 @@
 #include "rand.h"
 #include "read_file.h"
 
-#define MAX_LINE 1024
 
-char prob_name[MAX_LINE];
+//char prob_name[MAX_LINE];
 
-task_param t_param;
+//task_param t_param;
 
 void read_run_param()
 {

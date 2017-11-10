@@ -266,17 +266,7 @@ int main (int argc, char **argv)
 
     read_prob_param();
     allocate_prob();
-
-    if (strcmp(prob_name, "ptts\n") == 0)
-    {
-        input_ptts();
-        //printf("prob ptts\n");
-    }
-    else if (strcmp(prob_name, "cook\n") == 0)
-    {
-        input_ptts();
-        printf("prob cook\n");
-    }
+    input_prob();
 
     parent_pop = (population *)malloc(sizeof(population));
     child_pop = (population *)malloc(sizeof(population));
