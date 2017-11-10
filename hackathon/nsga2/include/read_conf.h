@@ -6,4 +6,5 @@
 #include "rand.h"
 
 extern char prob_name[];
-void read_conf(FILE *conf);
+void read_run_param(FILE *conf);
+void read_ptts_param(FILE *f);

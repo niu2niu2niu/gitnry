@@ -7,7 +7,7 @@
 # include "rand.h"
 # include "read_conf.h"
 
-task_param t_param;
+//task_param t_param;
 
 typedef struct
 {
@@ -22,9 +22,9 @@ int **restraint_comp;
 
 void allocate_ptts()
 {
-    t_param.t_num = 20;
-    t_param.meth_num = 6;
-    t_param.r_max_num = 4;
+//    t_param.t_num = 20;
+//    t_param.meth_num = 6;
+//    t_param.r_max_num = 4;
 
     int i = 0;
     meth = (method*)malloc(sizeof(method) * (t_param.t_num + 1));

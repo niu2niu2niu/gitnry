@@ -10,7 +10,9 @@
 
 char prob_name[MAX_LINE];
 
-void read_conf(FILE *f)
+task_param t_param;
+
+void read_run_param(FILE *f)
 {
     char line[MAX_LINE];
     while (fgets(line, MAX_LINE, f))
@@ -41,6 +43,23 @@ void read_conf(FILE *f)
             nbin = atoi(value);
         if (strcmp(name, "prob_name") == 0)
             strcpy(prob_name, value);
+    }
+    return;
+}
+
+void read_ptts_param(FILE *f)
+{
+    char line[MAX_LINE];
+    while (fgets(line, MAX_LINE, f))
+    {
+        char *name = strtok(line, "=");
+        char *value = strtok(NULL, "=");
+        if (strcmp(name, "t_num") == 0)
+            t_param.t_num = atoi(value);
+        if (strcmp(name, "meth_num") == 0)
+            t_param.meth_num = atoi(value);
+        if (strcmp(name, "r_max_num") == 0)
+            t_param.r_max_num = atoi(value);
     }
     return;
 }
