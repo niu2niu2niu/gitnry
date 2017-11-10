@@ -154,6 +154,9 @@ void selection (population *old_pop, population *new_pop);
 individual* tournament (individual *ind1, individual *ind2);
 
 // my
-
+void allocate_prob();
+void deallocate_prob();
+void input_prob();
+void report_pop_task (population *pop, FILE *fpt);
 
 # endif

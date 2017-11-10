@@ -59,6 +59,7 @@ int main (int argc, char **argv)
     fprintf(fpt3,"# This file contains the data of final feasible population (if found)\n");
     fprintf(fpt4,"# This file contains the data of all generations\n");
     fprintf(fpt5,"# This file contains information about inputs as read by the program\n");
+    // 读取执行参数
     read_run_param();
     if (seed<=0.0 || seed>=1.0)
     {
@@ -264,8 +265,11 @@ int main (int argc, char **argv)
     nbincross = 0;
     nrealcross = 0;
 
+    // 读取问题参数
     read_prob_param();
+    // 根据参数申请空间
     allocate_prob();
+    // 输入问题
     input_prob();
 
     parent_pop = (population *)malloc(sizeof(population));
@@ -309,6 +313,13 @@ int main (int argc, char **argv)
     printf(" Generations finished, now reporting solutions\n");
     report_pop(parent_pop,fpt2);
     report_feasible(parent_pop,fpt3);
+    
+    // 输出 task
+    FILE *fpt_task;
+    fpt_task = fopen("output/task_pop.out", "w");
+    report_pop_task(parent_pop, fpt_task);
+    fclose(fpt_task);
+
     if (nreal!=0)
     {
         fprintf(fpt5,"\n Number of crossover of real variable = %d",nrealcross);
@@ -347,6 +358,7 @@ int main (int argc, char **argv)
     free (parent_pop);
     free (child_pop);
     free (mixed_pop);
+    // 释放问题申请的空间
     deallocate_prob();
     printf(" Routine successfully exited \n");
     return (0);

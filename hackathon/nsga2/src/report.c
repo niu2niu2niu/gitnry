@@ -91,3 +91,20 @@ void report_feasible (population *pop, FILE *fpt)
     }
     return;
 }
+
+void report_pop_task (population *pop, FILE *fpt)
+{
+    int i, j;
+    for (i=0; i<popsize; i++)
+    {
+        for (j=0; j<nobj; j++)
+            fprintf(fpt,"%f\t",pop->ind[i].obj[j]);
+        for (j=0; j<t_param.t_num; j++)
+            fprintf(fpt,"%d,",pop->ind[i].chri.t[j]);
+        fprintf(fpt,"\t\t");
+        for (j=0; j<t_param.t_num; j++)
+            fprintf(fpt,"%d,",pop->ind[i].chri.m[j]);
+        fprintf(fpt,"\n");
+    }
+    return;
+}
