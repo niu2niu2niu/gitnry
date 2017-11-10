@@ -82,30 +82,34 @@ def read_dish_file(filename, d_unfold):
 
 # 将已经汇总好的任务所有信息存入文件
 def write_step_total(d_step_total):
-    with open('output/text', 'w') as f_text:
-        with open('output/time', 'w') as f_time:
-            with open('output/restraint', 'w') as f_restraint:
-                with open('output/method', 'w') as f_method:
-                    with open('output/machine', 'w') as f_machine:
-                        for step in d_step_total:
-                            # 任务对应的文本
-                            text = str(step) + '\t' + d_step_total[step]['text'] + '\n'
-                            f_text.write(text)
-                            # 任务的执行所需时间
-                            time = str(step) + '\t' + str(d_step_total[step]['time']) + '\n'
-                            f_time.write(time)
-                            # 任务优先级
-                            for r in d_step_total[step]['restraint']:
-                                restraint = str(step) + '\t' + str(r) + '\n'
-                                f_restraint.write(restraint)
-                            # 任务方案个数
-                            machine_num = len(d_step_total[step]['machine'])
-                            method = str(step) + '\t' + str(machine_num) + '\n'
-                            f_method.write(method)
-                            # 任务与 machine 的对应
-                            for i in range(machine_num):
-                                machine = str(step) + '\t' + str(i) + '\t' 
-                                for m in d_step_total[step]['machine'][i]:
-                                    machine += str(m) + '\t'
-                                machine = machine.strip('\t') + '\n'
-                                f_machine.write(machine)
+    with open('output/restraint', 'w') as f_restraint:
+        with open('output/text', 'w') as f_text:
+            with open('output/method_time', 'w') as f_method_time:
+                with open('output/machine', 'w') as f_machine:
+                    f_text.write("# task_id task_text\n")
+                    f_method_time.write("# task_id method_num task_time\n")
+                    f_restraint.write("# task_id1 > task_id2\n")
+                    f_machine.write("# task_id method_id machine_num machine_id1 machine_id2 ...\n")
+                    for step in d_step_total:
+                        # 任务优先级
+                        for r in d_step_total[step]['restraint']:
+                            restraint = str(step) + '\t' + str(r) + '\n'
+                            f_restraint.write(restraint)
+                        # 任务对应的文本
+                        text = str(step) + '\t' + d_step_total[step]['text'] + '\n'
+                        f_text.write(text)
+                        # 任务方案个数和执行方案所需要的时间
+                        machine_num = len(d_step_total[step]['machine'])
+                        method_time = str(step) + '\t' + str(machine_num) + '\t' \
+                                + str(d_step_total[step]['time']) + '\n'
+                        f_method_time.write(method_time)
+                        # 任务与 machine 的对应
+                        for i in range(machine_num):
+                            machine = str(step) + '\t' + str(i + 1) + '\t' 
+                            # 当前方案的机器列表
+                            method_machine_l = d_step_total[step]['machine'][i]
+                            machine += str(len(method_machine_l)) + '\t'
+                            for m in method_machine_l:
+                                machine += str(m) + '\t'
+                            machine = machine.strip('\t') + '\n'
+                            f_machine.write(machine)

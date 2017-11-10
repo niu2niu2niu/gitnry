@@ -9,5 +9,5 @@ pmut_real=0.02;
 eta_c=10;
 eta_m=50;
 nbin=0;
-prob_name=ptts
-#prob_name=cook
+#prob_name=ptts
+prob_name=cook

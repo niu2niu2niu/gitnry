@@ -341,10 +341,72 @@ void input_ptts()
     restraint[20-1][16-1] = -1;
 
     restraint_complete();
+    return;
 }
 
 void input_cook()
 {
+    FILE *f;
+    char line[MAX_LINE];
+
+    // 方案和时间
+    //meth[1].m[1] = 1;  meth[1].m[2] = 2;  meth[1].m[3] = 3;  meth[1].m[4] = 0;  meth[1].m[5] = 0;
+    //meth[1].time[1] = 2;  meth[1].time[2] = 5;  meth[1].time[3] = 3;  meth[1].time[4] = 0;  meth[1].time[5] = 0;
+    f = fopen("cook_data/output/method_time", "r");
+    while (fgets(line, MAX_LINE, f))
+    {
+        if (line[0] == '#') continue;
+        char *task_id = strtok(line, "\t");
+        int t_id = atoi(task_id);
+        char *method_num = strtok(NULL, "\t");
+        int m_len = atoi(method_num);
+        char *task_time = strtok(NULL, "\t");
+        int time = atoi(task_time);
+        for (int i = 1; i <= m_len; i++)
+        {
+            meth[t_id].m[i] = i;
+            meth[t_id].time[i] = time;
+        }
+    }
+    fclose(f);
+
+    // 机器
+    //meth[1].r[1][1] = 1;  meth[1].r[1][2] = 4;  meth[1].r[1][3] = 0;
+    f = fopen("cook_data/output/machine", "r");
+    while (fgets(line, MAX_LINE, f))
+    {
+        if (line[0] == '#') continue;
+        char *task_id = strtok(line, "\t");
+        int t_id = atoi(task_id);
+        char *method_id = strtok(NULL, "\t");
+        int meth_id = atoi(method_id);
+        char *machine_num = strtok(NULL, "\t");
+        int mach_num = atoi(machine_num);
+        for (int i = 1; i <= mach_num; i++)
+        {
+            char *mach_id = strtok(NULL, "\t");
+            meth[t_id].r[meth_id][i] = atoi(mach_id);
+        }
+    }
+    fclose(f);
+
+    // 约束
+    //restraint[16-1][20-1] = 1;// t16 > t20
+    //restraint[20-1][16-1] = -1;
+    f = fopen("cook_data/output/restraint", "r");
+    while (fgets(line, MAX_LINE, f))
+    {
+        if (line[0] == '#') continue;
+        char *task_id1 = strtok(line, "\t");
+        int t_id1 = atoi(task_id1);
+        char *task_id2 = strtok(NULL, "\t");
+        int t_id2 = atoi(task_id2);
+        restraint[t_id1 - 1][t_id2 - 1] = 1;
+        restraint[t_id2 - 1][t_id1 - 1] = -1;
+    }
+    fclose(f);
+    
+    restraint_complete();
     return;
 }
 
