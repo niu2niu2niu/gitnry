@@ -21,6 +21,7 @@ typedef struct
 {
     int *t;
     int *m;
+    int *t_time;
 
 }chr;
 

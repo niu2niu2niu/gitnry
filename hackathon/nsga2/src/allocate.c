@@ -3,6 +3,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <math.h>
+# include <memory.h>
 
 # include "global.h"
 # include "rand.h"
@@ -31,7 +32,11 @@ void allocate_memory_ind (individual *ind)
     {
         ind->xreal = (double *)malloc(nreal*sizeof(double));
         ind->chri.t = (int*)malloc(sizeof(int) * t_param.t_num);
+        memset(ind->chri.t, 0, (sizeof(int) * t_param.t_num));
         ind->chri.m = (int*)malloc(sizeof(int) * t_param.t_num);
+        memset(ind->chri.m, 0, (sizeof(int) * t_param.t_num));
+        ind->chri.t_time = (int*)malloc(sizeof(int) * t_param.t_num);
+        memset(ind->chri.t_time, 0, (sizeof(int) * t_param.t_num));
     }
     if (nbin != 0)
     {
@@ -71,6 +76,7 @@ void deallocate_memory_ind (individual *ind)
         free(ind->xreal);
         free(ind->chri.t);
         free(ind->chri.m);
+        free(ind->chri.t_time);
     }
     if (nbin != 0)
     {
@@ -96,10 +102,16 @@ void allocate_prob()
     for(i = 0; i < t_param.t_num + 1; i++)
     {
         meth[i].m = (int*)malloc(sizeof(int) * (t_param.meth_num + 1));
+        memset(meth[i].m, 0, (sizeof(int) * (t_param.meth_num + 1)));
         meth[i].time = (int*)malloc(sizeof(int) * (t_param.meth_num + 1));
+        memset(meth[i].time, 0, (sizeof(int) * (t_param.meth_num + 1)));
         meth[i].r = (int**)malloc(sizeof(int*) * (t_param.meth_num + 1));
+        memset(meth[i].r, 0, (sizeof(int*) * (t_param.meth_num + 1)));
         for(int j = 0; j < t_param.meth_num + 1; j++)
+        {
             meth[i].r[j] = (int*)malloc(sizeof(int) * (t_param.r_max_num + 1));
+            memset(meth[i].r[j], 0, sizeof(int) * (t_param.r_max_num + 1));
+        }
     }
 
     restraint = (int**)malloc(sizeof(int*) * t_param.t_num);

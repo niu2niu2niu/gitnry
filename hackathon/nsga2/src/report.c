@@ -94,16 +94,26 @@ void report_feasible (population *pop, FILE *fpt)
 
 void report_pop_task (population *pop, FILE *fpt)
 {
-    int i, j;
+    int i, j, k;
     for (i=0; i<popsize; i++)
     {
         for (j=0; j<nobj; j++)
             fprintf(fpt,"%f\t",pop->ind[i].obj[j]);
         for (j=0; j<t_param.t_num; j++)
-            fprintf(fpt,"%d,",pop->ind[i].chri.t[j]);
-        fprintf(fpt,"\t\t");
-        for (j=0; j<t_param.t_num; j++)
-            fprintf(fpt,"%d,",pop->ind[i].chri.m[j]);
+        {
+            int task_id = pop->ind[i].chri.t[j];
+            int method_id = pop->ind[i].chri.m[j];
+            int time = meth[task_id].time[method_id];
+            fprintf(fpt,"(t:%d m:%d time:%d r:", task_id, method_id, time);
+            for (k = 1; k < t_param.r_max_num; k++)
+            {
+                int r = meth[task_id].r[method_id][k];
+                if (r == 0) break;
+                else fprintf(fpt, "%d ", r);
+            }
+            int t_time = pop->ind[i].chri.t_time[j];
+            fprintf(fpt,"t_time:%d),", t_time);
+        }
         fprintf(fpt,"\n");
     }
     return;

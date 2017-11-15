@@ -499,12 +499,11 @@ void test_problem(individual *ind)
     //x[5] = 0.23558;
 
     //初始化
-//    chri.t = (int*)malloc(sizeof(int) * t_param.t_num);
-//    chri.m = (int*)malloc(sizeof(int) * t_param.t_num);
     for (chri_i=0;chri_i<t_param.t_num;chri_i++)
     {
         chri.t[chri_i] = 1;
         chri.m[chri_i] = 0;
+        chri.t_time[chri_i] = 0;
     }
 
     //得到任务序列
@@ -658,6 +657,11 @@ void test_problem(individual *ind)
     //            }
     //        }
     //    }
+
+    for (chri_i=0;chri_i<t_param.t_num;chri_i++)
+    {
+        chri.t_time[chri_i] = t_time[chri_i];
+    }
 
     obj[0] = f[0];
     obj[1] = f[1];
