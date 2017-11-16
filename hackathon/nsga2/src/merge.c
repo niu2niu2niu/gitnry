@@ -29,6 +29,7 @@ void copy_ind (individual *ind1, individual *ind2)
     ind2->rank = ind1->rank;
     ind2->constr_violation = ind1->constr_violation;
     ind2->crowd_dist = ind1->crowd_dist;
+    ind2->chri = ind1->chri;
     if (nreal!=0)
     {
         for (i=0; i<nreal; i++)

@@ -104,12 +104,12 @@ void report_pop_task (population *pop, FILE *fpt)
             int task_id = pop->ind[i].chri.t[j];
             int method_id = pop->ind[i].chri.m[j];
             int time = meth[task_id].time[method_id];
-            fprintf(fpt,"(t:%d m:%d time:%d r:", task_id, method_id, time);
+            fprintf(fpt,"(t:%d m:%d time:%d ", task_id, method_id, time);
             for (k = 1; k < t_param.r_max_num; k++)
             {
                 int r = meth[task_id].r[method_id][k];
                 if (r == 0) break;
-                else fprintf(fpt, "%d ", r);
+                else fprintf(fpt, "r:%d ", r);
             }
             int t_time = pop->ind[i].chri.t_time[j];
             fprintf(fpt,"t_time:%d),", t_time);
