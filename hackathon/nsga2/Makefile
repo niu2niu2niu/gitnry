@@ -21,6 +21,6 @@ $(OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDEFLAGS)
 clean:
 	$(RM) $(OBJS)
-
+	$(RM) $(MAIN)
 info:
 	@echo "objs: "$(OBJS)

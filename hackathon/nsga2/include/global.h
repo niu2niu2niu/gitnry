@@ -56,7 +56,7 @@ list;
 typedef struct
 {
     int t_num;
-    int meth_num;
+    int meth_max_num;
     int r_max_num;
 }task_param;
 

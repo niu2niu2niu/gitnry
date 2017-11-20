@@ -65,13 +65,13 @@ void read_prob_param()
         char *value = strtok(NULL, "=");
         if (strcmp(name, "t_num") == 0)
             t_param.t_num = atoi(value);
-        if (strcmp(name, "meth_num") == 0)
-            t_param.meth_num = atoi(value);
+        if (strcmp(name, "meth_max_num") == 0)
+            t_param.meth_max_num = atoi(value);
         if (strcmp(name, "r_max_num") == 0)
             t_param.r_max_num = atoi(value);
     }
     printf("t_num: %d\n", t_param.t_num);
-    printf("meth_num: %d\n", t_param.meth_num);
+    printf("meth_max_num: %d\n", t_param.meth_max_num);
     printf("r_max_num: %d\n", t_param.r_max_num);
     fclose(f);
     return;
