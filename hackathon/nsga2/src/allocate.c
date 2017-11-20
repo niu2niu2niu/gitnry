@@ -101,13 +101,13 @@ void allocate_prob()
     meth = (method*)malloc(sizeof(method) * (t_param.t_num + 1));
     for(i = 0; i < t_param.t_num + 1; i++)
     {
-        meth[i].m = (int*)malloc(sizeof(int) * (t_param.meth_num + 1));
-        memset(meth[i].m, 0, (sizeof(int) * (t_param.meth_num + 1)));
-        meth[i].time = (int*)malloc(sizeof(int) * (t_param.meth_num + 1));
-        memset(meth[i].time, 0, (sizeof(int) * (t_param.meth_num + 1)));
-        meth[i].r = (int**)malloc(sizeof(int*) * (t_param.meth_num + 1));
-        memset(meth[i].r, 0, (sizeof(int*) * (t_param.meth_num + 1)));
-        for(int j = 0; j < t_param.meth_num + 1; j++)
+        meth[i].m = (int*)malloc(sizeof(int) * (t_param.meth_max_num + 1));
+        memset(meth[i].m, 0, (sizeof(int) * (t_param.meth_max_num + 1)));
+        meth[i].time = (int*)malloc(sizeof(int) * (t_param.meth_max_num + 1));
+        memset(meth[i].time, 0, (sizeof(int) * (t_param.meth_max_num + 1)));
+        meth[i].r = (int**)malloc(sizeof(int*) * (t_param.meth_max_num + 1));
+        memset(meth[i].r, 0, (sizeof(int*) * (t_param.meth_max_num + 1)));
+        for(int j = 0; j < t_param.meth_max_num + 1; j++)
         {
             meth[i].r[j] = (int*)malloc(sizeof(int) * (t_param.r_max_num + 1));
             memset(meth[i].r[j], 0, sizeof(int) * (t_param.r_max_num + 1));
@@ -132,7 +132,7 @@ void deallocate_prob()
     {
         free(meth[i].m);
         free(meth[i].time);
-        for(int j = 0; j < t_param.meth_num + 1; j++)
+        for(int j = 0; j < t_param.meth_max_num + 1; j++)
             free(meth[i].r[j]);
         free(meth[i].r);
     }

@@ -86,30 +86,38 @@ def write_step_total(d_step_total):
         with open('output/text', 'w') as f_text:
             with open('output/method_time', 'w') as f_method_time:
                 with open('output/machine', 'w') as f_machine:
-                    f_text.write("# task_id task_text\n")
-                    f_method_time.write("# task_id method_num task_time\n")
-                    f_restraint.write("# task_id1 > task_id2\n")
-                    f_machine.write("# task_id method_id machine_num machine_id1 machine_id2 ...\n")
-                    for step in d_step_total:
-                        # 任务优先级
-                        for r in d_step_total[step]['restraint']:
-                            restraint = str(step) + '\t' + str(r) + '\n'
-                            f_restraint.write(restraint)
-                        # 任务对应的文本
-                        text = str(step) + '\t' + d_step_total[step]['text'] + '\n'
-                        f_text.write(text)
-                        # 任务方案个数和执行方案所需要的时间
-                        machine_num = len(d_step_total[step]['machine'])
-                        method_time = str(step) + '\t' + str(machine_num) + '\t' \
-                                + str(d_step_total[step]['time']) + '\n'
-                        f_method_time.write(method_time)
-                        # 任务与 machine 的对应
-                        for i in range(machine_num):
-                            machine = str(step) + '\t' + str(i + 1) + '\t' 
-                            # 当前方案的机器列表
-                            method_machine_l = d_step_total[step]['machine'][i]
-                            machine += str(len(method_machine_l)) + '\t'
-                            for m in method_machine_l:
-                                machine += str(m) + '\t'
-                            machine = machine.strip('\t') + '\n'
-                            f_machine.write(machine)
+                    with open('../input_data_param/cook_param.txt', 'w') as f_param:
+                        f_text.write("# task_id task_text\n")
+                        f_method_time.write("# task_id method_num task_time\n")
+                        f_restraint.write("# task_id1 > task_id2\n")
+                        f_machine.write("# task_id method_id machine_num machine_id1 machine_id2 ...\n")
+                        f_param.write("t_num=%s\n" %(len(d_step_total)))
+                        meth_max_num = 0
+                        r_max_num = 0
+                        for step in d_step_total:
+                            # 任务优先级
+                            for r in d_step_total[step]['restraint']:
+                                restraint = str(step) + '\t' + str(r) + '\n'
+                                f_restraint.write(restraint)
+                            # 任务对应的文本
+                            text = str(step) + '\t' + d_step_total[step]['text'] + '\n'
+                            f_text.write(text)
+                            # 任务方案个数和执行方案所需要的时间
+                            machine_num = len(d_step_total[step]['machine'])
+                            meth_max_num = max(meth_max_num, machine_num)
+                            method_time = str(step) + '\t' + str(machine_num) + '\t' \
+                                    + str(d_step_total[step]['time']) + '\n'
+                            f_method_time.write(method_time)
+                            # 任务与 machine 的对应
+                            for i in range(machine_num):
+                                machine = str(step) + '\t' + str(i + 1) + '\t' 
+                                # 当前方案的机器列表
+                                method_machine_l = d_step_total[step]['machine'][i]
+                                r_max_num = max(r_max_num, len(method_machine_l))
+                                machine += str(len(method_machine_l)) + '\t'
+                                for m in method_machine_l:
+                                    machine += str(m) + '\t'
+                                machine = machine.strip('\t') + '\n'
+                                f_machine.write(machine)
+                        f_param.write("meth_max_num=%d\n" %(meth_max_num))
+                        f_param.write("r_max_num=%d\n" %(r_max_num))
